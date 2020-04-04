@@ -71,9 +71,7 @@ const userList = () => {
   const query = document.getElementById('userlistSearch').value;
   const list = document.getElementById('userList');
   const token = localStorage.getItem('token');
-  fetch(`${url}users?page=${page}&limit=25&query=${query}`, {
-  // fetch(`${url}users?page=${page}&limit=${limit}&query=${query}`, {
-  // fetch('http://localhost:8888/php-api/users?page=&limit=&query=', {
+  fetch(`${url}users?page=${page}&limit=${limit}&query=${query}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
