@@ -1,4 +1,6 @@
 <?php
+// 新規登録機能
+function sign_up(){
   // dbに繋ぐ
   require_once(dirname(__FILE__) . '/../dbconnect.php');
 
@@ -75,4 +77,5 @@
   $rtrnFtchAllRslt = $rtrnStmt->fetchAll(PDO::FETCH_ASSOC);
   unset($rtrnFtchAllRslt[0]['password']); // 配列からpassword要素を削除
   sendResponse($rtrnFtchAllRslt[0]);
+}
 ?>

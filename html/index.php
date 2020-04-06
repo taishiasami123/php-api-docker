@@ -17,15 +17,43 @@
     $paramsExcludedUri = $requestUri;
   }
   $substrUri = substr($paramsExcludedUri, 9, strlen($paramsExcludedUri) - 9);
+  $method = $_SERVER['REQUEST_METHOD'];
 
   // 各機能を呼び出す
   if ($substrUri == 'sign_up') {
     require_once(dirname(__FILE__) . '/controllers/sign_up.php');
-  // } elseif ($substrUri == 'sign_in') {
-  //   require_once(dirname(__FILE__) . 'controllers/sign_in.php');
-  // } elseif ($substrUri == 'users') {
-  //   require_once(dirname(__FILE__) . 'controllers/users.php');
-  // } elseif ($substrUri == 'posts') {
-  //   require_once(dirname(__FILE__) . 'controllers/posts.php');
+    sign_up();
+  } elseif ($substrUri == 'sign_in') {
+    require_once(dirname(__FILE__) . '/controllers/sign_in.php');
+    sign_in();
+  } elseif (strpos($substrUri, 'users') == 0) {
+    require_once(dirname(__FILE__) . '/controllers/users.php');
+    if (strpos($substrUri, 'timeline') == true) {
+      timeline();
+    } else {
+      $id = substr($substrUri, 6, strlen($substrUri) - 6);
+      $substrUri = substr($substrUri, 0, 5);
+      if ($method == 'GET') {
+        userList();
+      } elseif ($method == 'PUT') {
+        editUser();
+      } elseif ($method == 'DELETE') {
+        deleteUser();
+      }
+    }
+  } elseif (strpos($substrUri, 'posts') == 0) {
+    sendResponse('test');
+    // require_once(dirname(__FILE__) . '/controllers/posts.php');
+    // $id = substr($substrUri, 6, strlen($substrUri) - 6);
+    // $substrUri = substr($substrUri, 0, 5);
+    // if ($method == 'GET') {
+    //   postList();
+    // } elseif ($method == 'POST') {
+    //   submitPost();
+    // } elseif ($method == 'PUT') {
+    //   editPost();
+    // } elseif ($method == 'DELETE') {
+    //   deletePost();
+    // }
   }
 ?>
