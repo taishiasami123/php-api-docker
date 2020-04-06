@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: mysql
--- 生成日時: 2020 年 4 月 06 日 11:19
+-- 生成日時: 2020 年 4 月 06 日 11:22
 -- サーバのバージョン： 5.7.29
 -- PHP のバージョン: 7.4.3
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- データベース: `sns_api`
 --
+CREATE DATABASE IF NOT EXISTS `sns_api` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `sns_api`;
 
 -- --------------------------------------------------------
 
