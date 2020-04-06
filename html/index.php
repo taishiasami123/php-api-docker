@@ -20,13 +20,12 @@
 
   // 各機能を呼び出す
   if ($substrUri == 'sign_up') {
-    require_once('test.php');
-    // sendResponse('test'); //←返ってくる
-  } elseif ($substrUri == 'sign_in') {
-    require_once('controllers/sign_in.php');
-  } elseif ($substrUri == 'users') {
-    require_once('controllers/users.php');
-  } elseif ($substrUri == 'posts') {
-    require_once('controllers/posts.php');
+    require_once('controllers/sign_up.php');
+  // } elseif ($substrUri == 'sign_in') {
+  //   require_once('controllers/sign_in.php');
+  // } elseif ($substrUri == 'users') {
+  //   require_once('controllers/users.php');
+  // } elseif ($substrUri == 'posts') {
+  //   require_once('controllers/posts.php');
   }
 ?>
