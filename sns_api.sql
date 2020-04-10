@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: mysql
--- 生成日時: 2020 年 4 月 06 日 11:22
+-- 生成日時: 2020 年 4 月 10 日 09:28
 -- サーバのバージョン： 5.7.29
 -- PHP のバージョン: 7.4.3
 
@@ -69,7 +69,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `bio`, `email`, `password`, `token`, `created_at`, `updated_at`) VALUES
-(317, 'test1', 'test1', 'test1', '1b4f0e9851971998e732078544c96b36c3d01cedf7caa332359d6f1d83567014', '83624b49b8d711d1a307a6cd754472f65afc5c414bf1f13c266ef18014cee504', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
+(317, 'test1', 'test1', 'test1', '1b4f0e9851971998e732078544c96b36c3d01cedf7caa332359d6f1d83567014', '83624b49b8d711d1a307a6cd754472f65afc5c414bf1f13c266ef18014cee504', '2020-03-26 17:30:25', '2020-04-10 09:13:12'),
 (318, 'test2', 'test2', 'test2', '60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752', '3410740b845e4bfecd71fe5c89a8e18735a1f0845195d44e54c0e15de3f46db7', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
 (319, 'test3', 'test3', 'test3', 'fd61a03af4f77d870fc21e05e7e80678095c92d808cfb3b5c279ee04c74aca13', '98451817fb9542af9b2b99d4f24b98c183b6e4d8d9fb971e24addaa08b4b16f3', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
 (320, 'test4', 'test4', 'test4', 'a4e624d686e03ed2767c0abd85c14426b0b1157d2ce81d27bb4fe4f6f01d688a', 'fca4c52846f7f151ca9a25fd06e363a0590361d196ea00d5da2e642e1c619e34', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
@@ -138,8 +138,7 @@ INSERT INTO `users` (`id`, `name`, `bio`, `email`, `password`, `token`, `created
 (383, 'test67', 'test67', 'test67', 'b85d95e12c6de414c7c7a115bac0926b81be9b27cd8628bf78352729c0df5d58', '5c8e05a0b7ad1b97288060e3a237f5d421d1f9dff850169e548543c43b2301f1', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
 (384, 'test68', 'test68', 'test68', '01775e9d78f43286f1b9283cfd5ac88a1b916f1f14f05be947f18ad15458f6bd', '452e55e78e56b09381676d5ffbb008202140b12fc86528d0bc2086e71202a4b2', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
 (385, 'test69', 'test69', 'test69', '9f2d0ea5850156f702bc2d2b422e82b82d45c0f41786dd78b26f70021ff7c90b', '74a08e6ba791b0b3d14067ec0f3ad61fd313fc2d3420309a50a46c77206c5812', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
-(386, 'test70', 'test70', 'test70', 'fe0e5ebf97c5941df65b903f8a7b41f9955745d62db126c5c2682df97f5b3a4f', '36e958f2425ea5d89eaea8af57d59fe37a272235af4fa2846f4c819797903872', '2020-03-26 17:30:25', '2020-03-26 08:30:25'),
-(387, 'test71', 'test71', 'test71', 'fa2c5276894d911e7695b121482104a4bc180d6b65ddbb357fa48e22f03ea608', '65a21b41ee945d9d0dd158aa7459951d62d1bb914baf854b9d5379c5a5618dfb', '2020-04-06 15:24:35', '2020-04-06 06:24:35');
+(386, 'test70', 'test70', 'test70', 'fe0e5ebf97c5941df65b903f8a7b41f9955745d62db126c5c2682df97f5b3a4f', '36e958f2425ea5d89eaea8af57d59fe37a272235af4fa2846f4c819797903872', '2020-03-26 17:30:25', '2020-03-26 08:30:25');
 
 --
 -- ダンプしたテーブルのインデックス
@@ -165,7 +164,7 @@ ALTER TABLE `users`
 -- テーブルのAUTO_INCREMENT `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- テーブルのAUTO_INCREMENT `users`
