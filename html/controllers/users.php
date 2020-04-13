@@ -29,9 +29,9 @@ function userList($db)
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUser = $db->prepare('SELECT id, name, created_at, updated_at FROM users');
+        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users');
     } else {
-        $selectUser = $db->prepare('SELECT id, name, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword');
+        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword');
         $searchKeyword = '%' . $keyword . '%';
         $selectUser->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
     }
