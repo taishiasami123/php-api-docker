@@ -11,11 +11,21 @@ function sendResponse($obj)
 }
 
 // DBに接続する
-try {
-    $db = new PDO('mysql:dbname=sns_api;host=mysql;charset=utf8', 'root', 'root');
-} catch (PDOException $e) {
-    echo json_encode('DB接続エラー:' . $e->getMessage());
-    die();
+class Db
+{
+    private static $pdo = null;
+    public static function getPdo()
+    {
+        if (self::$pdo === null) {
+            try {
+                self::$pdo = new PDO('mysql:dbname=sns_api;host=mysql;charset=utf8', 'root', 'root');
+            } catch (PDOException $e) {
+                echo json_encode('DB接続エラー:' . $e->getMessage());
+                die();
+            }
+        }
+        return self::$pdo;
+    }
 }
 
 // URLから各機能の文字列を取り出す
