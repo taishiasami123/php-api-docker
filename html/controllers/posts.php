@@ -29,9 +29,9 @@ function postList($db)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === "") {
-        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts');
+        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC');
     } else {
-        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword');
+        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC');
         $searchKeyword = "%" . $keyword . "%";
         $selectPost->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
     }

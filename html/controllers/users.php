@@ -29,9 +29,9 @@ function userList($db)
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users');
+        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC');
     } else {
-        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword');
+        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC');
         $searchKeyword = '%' . $keyword . '%';
         $selectUser->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
     }
@@ -194,10 +194,10 @@ function timeline($db, $id)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId');
+        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC');
         $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
     } else {
-        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword');
+        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC');
         $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
         $searchKeyword = '%' . $keyword . '%';
         $selectPostByUserId->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
