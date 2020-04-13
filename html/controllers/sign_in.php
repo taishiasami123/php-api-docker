@@ -18,7 +18,7 @@ function signIn()
     }
 
     // emailに入力された値と一致する行をdbから拾ってくる
-    $selectUserByEmail = $db->prepare('SELECT email, password FROM users WHERE email = :email');
+    $selectUserByEmail = Db::getPdo()->prepare('SELECT email, password FROM users WHERE email = :email');
     $selectUserByEmail->bindValue(':email', $email, PDO::PARAM_STR);
     try {
         $selectUserByEmail->execute();
@@ -44,7 +44,7 @@ function signIn()
     }
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmail = $db->prepare('SELECT * FROM users WHERE email = :email');
+    $selectUserAgainByEmail = Db::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
     $selectUserAgainByEmail->bindValue(':email', $selectedEmail, PDO::PARAM_STR);
     try {
         $selectUserAgainByEmail->execute();

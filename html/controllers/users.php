@@ -11,7 +11,7 @@ function userList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -29,9 +29,9 @@ function userList()
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC');
+        $selectUser = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC');
     } else {
-        $selectUser = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC');
+        $selectUser = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC');
         $searchKeyword = '%' . $keyword . '%';
         $selectUser->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
     }
@@ -75,7 +75,7 @@ function editUser($id)
     $bio = $params['bio'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT id, token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -99,7 +99,7 @@ function editUser($id)
     }
 
     // dbのnameとbioをupdateする
-    $updateUser = $db->prepare('UPDATE users SET name = :name, bio = :bio WHERE id = :id');
+    $updateUser = Db::getPdo()->prepare('UPDATE users SET name = :name, bio = :bio WHERE id = :id');
     $updateUser->bindValue(':id', $id, PDO::PARAM_INT);
     $updateUser->bindValue(':name', $name, PDO::PARAM_STR);
     $updateUser->bindValue(':bio', $bio, PDO::PARAM_STR);
@@ -110,7 +110,7 @@ function editUser($id)
     }
 
     // updateしたレコードを返却
-    $selectUserById = $db->prepare('SELECT id, name, bio, email, created_at, updated_at FROM users WHERE id = :id');
+    $selectUserById = Db::getPdo()->prepare('SELECT id, name, bio, email, created_at, updated_at FROM users WHERE id = :id');
     $selectUserById->bindValue(':id', $id, PDO::PARAM_INT);
     try {
         $selectUserById->execute();
@@ -130,7 +130,7 @@ function deleteUser($id)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT id, token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -153,7 +153,7 @@ function deleteUser($id)
         sendResponse($errorMessage);
     }
 
-    $deleteUser = $db->prepare('DELETE FROM users WHERE id = :id');
+    $deleteUser = Db::getPdo()->prepare('DELETE FROM users WHERE id = :id');
     $deleteUser->bindValue(':id', $id, PDO::PARAM_STR);
     try {
         $deleteUser->execute();
@@ -176,7 +176,7 @@ function timeline($id)
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -194,10 +194,10 @@ function timeline($id)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC');
+        $selectPostByUserId = Db::getPdo()->prepare('SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC');
         $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
     } else {
-        $selectPostByUserId = $db->prepare('SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC');
+        $selectPostByUserId = Db::getPdo()->prepare('SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC');
         $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
         $searchKeyword = '%' . $keyword . '%';
         $selectPostByUserId->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
@@ -210,7 +210,7 @@ function timeline($id)
     $selectPostByUserIdFetchAllResult = $selectPostByUserId->fetchAll(PDO::FETCH_ASSOC);
 
     // usersテーブル全体を一旦引っ張る
-    $selectUser = $db->prepare('SELECT * FROM users');
+    $selectUser = Db::getPdo()->prepare('SELECT * FROM users');
     try {
         $selectUser->execute();
     } catch (Exception $e) {

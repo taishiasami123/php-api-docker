@@ -11,7 +11,7 @@ function postList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -29,9 +29,9 @@ function postList()
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === "") {
-        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC');
+        $selectPost = Db::getPdo()->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC');
     } else {
-        $selectPost = $db->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC');
+        $selectPost = Db::getPdo()->prepare('SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC');
         $searchKeyword = "%" . $keyword . "%";
         $selectPost->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
     }
@@ -43,7 +43,7 @@ function postList()
     $selectPostFetchAllResult = $selectPost->fetchAll(PDO::FETCH_ASSOC);
 
     // usersテーブル全体を一旦引っ張る
-    $selectUser = $db->prepare('SELECT * FROM users');
+    $selectUser = Db::getPdo()->prepare('SELECT * FROM users');
     try {
         $selectUser->execute();
     } catch (Exception $e) {
@@ -94,7 +94,7 @@ function submitPost()
     $text = $params['text'];
 
     // usersテーブルからtokenに紐づくuserのidを拾ってくる
-    $selectUserByToken = $db->prepare('SELECT id, token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -112,18 +112,18 @@ function submitPost()
     }
 
     // postsテーブルにinsertする
-    $insertPost = $db->prepare('INSERT INTO posts SET text = :text, user_id = :userId, created_at = NOW()');
+    $insertPost = Db::getPdo()->prepare('INSERT INTO posts SET text = :text, user_id = :userId, created_at = NOW()');
     $insertPost->bindValue(':text', $text, PDO::PARAM_STR);
     $insertPost->bindValue(':userId', $selectedId, PDO::PARAM_INT);
     try {
         $insertPost->execute();
-        $insertedId = $db->lastInsertId();
+        $insertedId = Db::getPdo()->lastInsertId();
     } catch (Exception $e) {
         sendResponse($e);
     }
 
     // insertしたカラムをselectする
-    $selectPostByInsertedId = $db->prepare('SELECT * FROM posts WHERE id = :id');
+    $selectPostByInsertedId = Db::getPdo()->prepare('SELECT * FROM posts WHERE id = :id');
     $selectPostByInsertedId->bindValue(':id', $insertedId, PDO::PARAM_INT);
     try {
         $selectPostByInsertedId->execute();
@@ -134,7 +134,7 @@ function submitPost()
     $insertedUserId = $selectPostByInsertedIdFetchAllResult[0]['user_id'];
 
     // insertしたuserをselectする
-    $selectUserByInsertedUserId = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id');
+    $selectUserByInsertedUserId = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id');
     $selectUserByInsertedUserId->bindValue(':id', $insertedUserId, PDO::PARAM_INT);
     try {
         $selectUserByInsertedUserId->execute();
@@ -161,7 +161,7 @@ function editPost($id)
     $text = $params['text'];
 
     // usersテーブルからtokenに紐づくuserのidを拾ってくる
-    $selectUserByToken = $db->prepare('SELECT id, token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -179,7 +179,7 @@ function editPost($id)
     }
 
     // postsテーブルから編集する投稿のuser_idを拾う
-    $selectUserIdById = $db->prepare('SELECT user_id FROM posts WHERE id = :id');
+    $selectUserIdById = Db::getPdo()->prepare('SELECT user_id FROM posts WHERE id = :id');
     $selectUserIdById->bindValue(':id', $id, PDO::PARAM_INT);
     try {
         $selectUserIdById->execute();
@@ -196,7 +196,7 @@ function editPost($id)
     }
 
     // postsテーブルをupdateする
-    $updatePost = $db->prepare('UPDATE posts SET text = :text WHERE id = :id');
+    $updatePost = Db::getPdo()->prepare('UPDATE posts SET text = :text WHERE id = :id');
     $updatePost->bindValue(':text', $text, PDO::PARAM_STR);
     $updatePost->bindValue(':id', $id, PDO::PARAM_INT);
     try {
@@ -206,7 +206,7 @@ function editPost($id)
     }
 
     // updateしたカラムをselectする
-    $selectPostByInsertedId = $db->prepare('SELECT * FROM posts WHERE id = :id');
+    $selectPostByInsertedId = Db::getPdo()->prepare('SELECT * FROM posts WHERE id = :id');
     $selectPostByInsertedId->bindValue(':id', $id, PDO::PARAM_INT);
     try {
         $selectPostByInsertedId->execute();
@@ -216,7 +216,7 @@ function editPost($id)
     $selectPostByInsertedIdFetchAllResult = $selectPostByInsertedId->fetchAll(PDO::FETCH_ASSOC);
 
     // updateしたuserをselectする
-    $selectUserBySelectedId = $db->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id');
+    $selectUserBySelectedId = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id');
     $selectUserBySelectedId->bindValue(':id', $selectedId, PDO::PARAM_INT);
     try {
         $selectUserBySelectedId->execute();
@@ -240,7 +240,7 @@ function deletePost($id)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectUserByToken = $db->prepare('SELECT id, token FROM users WHERE token = :token');
+    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
     $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
     try {
         $selectUserByToken->execute();
@@ -258,7 +258,7 @@ function deletePost($id)
     }
 
     // postsテーブルから編集する投稿のuser_idを拾う
-    $selectUserIdById = $db->prepare('SELECT user_id FROM posts WHERE id = :id');
+    $selectUserIdById = Db::getPdo()->prepare('SELECT user_id FROM posts WHERE id = :id');
     $selectUserIdById->bindValue(':id', $id, PDO::PARAM_INT);
     try {
         $selectUserIdById->execute();
@@ -273,7 +273,7 @@ function deletePost($id)
         sendResponse($errorMessage);
     }
 
-    $deletePost = $db->prepare('DELETE FROM posts WHERE id = :id');
+    $deletePost = Db::getPdo()->prepare('DELETE FROM posts WHERE id = :id');
     $deletePost->bindValue(':id', $id, PDO::PARAM_STR);
     try {
         $deletePost->execute();

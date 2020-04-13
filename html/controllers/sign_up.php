@@ -37,7 +37,7 @@ function signUp()
     }
 
     // email重複チェック
-    $selectUserByEmail = $db->prepare("SELECT * FROM users WHERE email = :email");
+    $selectUserByEmail = Db::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
     $selectUserByEmail->bindValue(':email', $email, PDO::PARAM_STR);
     try {
         $selectUserByEmail->execute();
@@ -51,7 +51,7 @@ function signUp()
     }
 
     // db登録処理
-    $insertUser = $db->prepare('INSERT INTO users SET name = :name, bio = :bio, email = :email, password = :password, token = :token, created_at = NOW()');
+    $insertUser = Db::getPdo()->prepare('INSERT INTO users SET name = :name, bio = :bio, email = :email, password = :password, token = :token, created_at = NOW()');
     $insertUser->bindValue(':name', $name, PDO::PARAM_STR);
     $insertUser->bindValue(':bio', $bio, PDO::PARAM_STR);
     $insertUser->bindValue(':email', $email, PDO::PARAM_STR);
@@ -65,7 +65,7 @@ function signUp()
     }
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmail = $db->prepare('SELECT * FROM users WHERE email = :email');
+    $selectUserAgainByEmail = Db::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
     $selectUserAgainByEmail->bindValue(':email', $email, PDO::PARAM_STR);
     try {
         $selectUserAgainByEmail->execute();
