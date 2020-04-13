@@ -1,6 +1,6 @@
 <?php
 // 新規登録機能
-function signUp($db)
+function signUp()
 {
     // jsonを取得
     $json = file_get_contents("php://input");

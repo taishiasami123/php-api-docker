@@ -1,6 +1,6 @@
 <?php
 // ---------- ユーザー一覧機能 ----------
-function userList($db)
+function userList()
 {
     // jsonを取得
     $header = getallheaders();
@@ -63,7 +63,7 @@ function userList($db)
 }
 
 // ---------- ユーザー編集機能 ----------
-function editUser($db, $id)
+function editUser($id)
 {
     // jsonを取得
     $header = getallheaders();
@@ -122,7 +122,7 @@ function editUser($db, $id)
 }
 
 // ---------- ユーザー削除機能 ----------
-function deleteUser($db, $id)
+function deleteUser($id)
 {
     // jsonを取得
     $header = getallheaders();
@@ -165,7 +165,7 @@ function deleteUser($db, $id)
 }
 
 // ---------- タイムライン機能 ----------
-function timeline($db, $id)
+function timeline($id)
 {
     // jsonを取得
     $header = getallheaders();

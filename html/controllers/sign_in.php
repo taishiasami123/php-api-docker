@@ -1,6 +1,6 @@
 <?php
 // ログイン機能
-function signIn($db)
+function signIn()
 {
     // jsonを取得
     $json = file_get_contents("php://input");

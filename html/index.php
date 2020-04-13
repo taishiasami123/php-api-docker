@@ -41,24 +41,24 @@ $method = $_SERVER['REQUEST_METHOD'];
 // 各機能を呼び出す
 if ($substrUri === 'sign_up') {
     require_once(dirname(__FILE__) . '/controllers/sign_up.php');
-    signUp($db);
+    signUp();
 } elseif ($substrUri === 'sign_in') {
     require_once(dirname(__FILE__) . '/controllers/sign_in.php');
-    signIn($db);
+    signIn();
 } elseif (strpos($substrUri, 'users') === 0) {
     require_once(dirname(__FILE__) . '/controllers/users.php');
     if (strpos($substrUri, 'timeline') !== false) {
         $id = substr($substrUri, 6, strlen($substrUri) - 6);
-        timeline($db, $id);
+        timeline($id);
     } else {
         $id = substr($substrUri, 6, strlen($substrUri) - 6);
         $substrUri = substr($substrUri, 0, 5);
         if ($method === 'GET') {
-            userList($db);
+            userList();
         } elseif ($method === 'PUT') {
-            editUser($db, $id);
+            editUser($id);
         } elseif ($method === 'DELETE') {
-            deleteUser($db, $id);
+            deleteUser($id);
         }
     }
 } elseif (strpos($substrUri, 'posts') === 0) {
@@ -66,12 +66,12 @@ if ($substrUri === 'sign_up') {
     $id = substr($substrUri, 6, strlen($substrUri) - 6);
     $substrUri = substr($substrUri, 0, 5);
     if ($method === 'GET') {
-        postList($db);
+        postList();
     } elseif ($method === 'POST') {
-        submitPost($db);
+        submitPost();
     } elseif ($method === 'PUT') {
-        editPost($db, $id);
+        editPost($id);
     } elseif ($method === 'DELETE') {
-        deletePost($db, $id);
+        deletePost($id);
     }
 }

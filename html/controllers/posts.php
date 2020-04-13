@@ -1,6 +1,6 @@
 <?php
 // ---------- 投稿一覧機能 ----------
-function postList($db)
+function postList()
 {
     // jsonを取得
     $header = getallheaders();
@@ -83,7 +83,7 @@ function postList($db)
 }
 
 // ---------- 投稿作成機能 ----------
-function submitPost($db)
+function submitPost()
 {
     // jsonを取得
     $header = getallheaders();
@@ -150,7 +150,7 @@ function submitPost($db)
 }
 
 // ---------- 投稿編集機能 ----------
-function editPost($db, $id)
+function editPost($id)
 {
     // jsonを取得
     $header = getallheaders();
@@ -232,7 +232,7 @@ function editPost($db, $id)
 }
 
 // ---------- 投稿削除機能 ----------
-function deletePost($db, $id)
+function deletePost($id)
 {
     // jsonを取得
     $header = getallheaders();
