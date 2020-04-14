@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>PHP API</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="border-bottom mb-5">PHP API</h1>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">新規登録</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="signupName">name</label>
+          <input class="form-control" type="text" id="signupName" placeholder="名前">
+        </div>
+        <div class="col">
+          <label for="signupBio">bio</label>
+          <input class="form-control" type="text" id="signupBio" placeholder="自己紹介">
+        </div>
+        <div class="col">
+          <label for="signupEmail">email</label>
+          <input class="form-control" type="email" id="signupEmail" placeholder="メールアドレス">
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col">
+          <label for="signupPwd">password</label>
+          <input class="form-control" type="password" id="signupPwd" placeholder="パスワード">
+        </div>
+        <div class="col">
+          <label for="signupCfmPwd">confirm password</label>
+          <input class="form-control" type="password" id="signupCfmPwd" placeholder="パスワード確認">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="signup()">登録</button>
+        </div>
+      </div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">ログイン</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="signinEmail">email</label>
+          <input class="form-control" type="email" id="signinEmail" placeholder="メールアドレス">
+        </div>
+        <div class="col">
+          <label for="signinPwd">password</label>
+          <input class="form-control" type="password" id="signinPwd" placeholder="パスワード">
+        </div>
+        <div class="col">
+          <label for="signinCfmPwd">confirm password</label>
+          <input class="form-control" type="password" id="signinCfmPwd" placeholder="パスワード確認">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="signin()">ログイン</button>
+        </div>
+      </div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">ユーザー一覧</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="userlistPageNum">ページ番号</label>
+          <input class="form-control" type="text" id="userlistPageNum" placeholder="ページ番号">
+        </div>
+        <div class="col">
+          <label for="userlistLimit">表示件数</label>
+          <select class="form-control" name="表示件数" id="userlistLimit">
+            <option value="25">25件</option>
+            <option value="50">50件</option>
+            <option value="75">75件</option>
+            <option value="100">100件</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="userlistSearch">ユーザー検索</label>
+          <input class="form-control" type="text" id="userlistSearch" placeholder="ユーザーネーム">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="userList()">送信</button>
+        </div>
+      </div>
+      <ul class="list-group" id="userList"></ul>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">投稿一覧</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="postPageNum">ページ番号</label>
+          <input class="form-control" type="text" id="postPageNum" placeholder="ページ番号">
+        </div>
+        <div class="col">
+          <label for="postLimit">表示件数</label>
+          <select class="form-control" name="表示件数" id="postLimit">
+            <option value="25">25件</option>
+            <option value="50">50件</option>
+            <option value="75">75件</option>
+            <option value="100 ">100件</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="postSearch">投稿検索</label>
+          <input class="form-control" type="text" id="postSearch" placeholder="投稿内容">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="postList()">送信</button>
+        </div>
+      </div>
+      <ul class="list-group" id="postList"></ul>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">ユーザー編集</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="editId">ユーザーid</label>
+          <input class="form-control" type="text" id="editUserId" placeholder="ユーザーID">
+        </div>
+        <div class="col">
+          <label for="editName">name</label>
+          <input class="form-control" type="text" id="editUserName" placeholder="名前">
+        </div>
+        <div class="col">
+          <label for="editBio">bio</label>
+          <input class="form-control" type="text" id="editUserBio" placeholder="自己紹介">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="editUser()">送信</button>
+        </div>
+      </div>
+      <div id="editUser"></div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">ユーザー削除</h2>
+      <div class="row form-group">
+        <div class="col-3">
+          <label for="deleteUser">ユーザーID</label>
+          <input class="form-control" type="text" id="deleteUserId" placeholder="ユーザーID">
+        </div>
+        <div class="col-3 d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="deleteUser()">送信</button>
+        </div>
+      </div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">タイムライン</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="tlId">ユーザーID</label>
+          <input class="form-control" type="text" id="tlId" placeholder="ユーザーID">
+        </div>
+        <div class="col">
+          <label for="tlPageNum">ページ番号</label>
+          <input class="form-control" type="text" id="tlPageNum" placeholder="ページ番号">
+        </div>
+        <div class="col">
+          <label for="tlLimit">表示件数</label>
+          <select class="form-control" name="表示件数" id="tlLimit">
+            <option value="25">25件</option>
+            <option value="50">50件</option>
+            <option value="75">75件</option>
+            <option value="100">100件</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="tlSearch">タイムライン検索</label>
+          <input class="form-control" type="text" id="tlSearch" placeholder="キーワード">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="timeline()">送信</button>
+        </div>
+      </div>
+      <ul class="list-group" id="tlList"></ul>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">投稿作成</h2>
+      <div class="row form-group">
+        <div class="col-3">
+          <label for="createPost">投稿内容</label>
+          <input class="form-control" type="text" id="createPost" placeholder="投稿内容">
+        </div>
+        <div class="col-3 d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="submitPost()">送信</button>
+        </div>
+      </div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">投稿編集</h2>
+      <div class="row form-group">
+        <div class="col">
+          <label for="editPostId">POST ID</label>
+          <input class="form-control" type="text" id="editPostId" placeholder="POST ID">
+        </div>
+        <div class="col">
+          <label for="editText">編集内容</label>
+          <input class="form-control" type="text" id="editText" placeholder="編集内容">
+        </div>
+        <div class="col d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="editPost()">送信</button>
+        </div>
+      </div>
+    </section>
+    <section class="border-bottom mb-5">
+      <h2 class="text-primary">投稿削除</h2>
+      <div class="row form-group">
+        <div class="col-3">
+          <label for="deletePostId">POST ID</label>
+          <input class="form-control" type="text" id="deletePostId" placeholder="POST ID">
+        </div>
+        <div class="col-3 d-flex align-items-end justify-content-center">
+          <button class="btn btn-primary" type="submit" onclick="deletePost()">送信</button>
+        </div>
+      </div>
+    </section>
+    <script src="script.js"></script>
+  </div>
+</body>
+
+</html>
