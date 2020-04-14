@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(__FILE__) . '/Db.php';
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Methods: *');
@@ -8,24 +11,6 @@ function sendResponse($obj)
 {
     echo json_encode($obj);
     die();
-}
-
-// DBに接続する
-class Db
-{
-    private static $pdo = null;
-    public static function getPdo()
-    {
-        if (self::$pdo === null) {
-            try {
-                self::$pdo = new PDO('mysql:dbname=sns_api;host=mysql;charset=utf8', 'root', 'root');
-            } catch (PDOException $e) {
-                echo json_encode('DB接続エラー:' . $e->getMessage());
-                die();
-            }
-        }
-        return self::$pdo;
-    }
 }
 
 // URLから各機能の文字列を取り出す

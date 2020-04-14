@@ -29,50 +29,24 @@ function signUp()
     } elseif ($password === "") {
         $errorMessage = "Validation failed: Password can't be blank";
         sendResponse($errorMessage);
-
-    // password一致チェック
-    } elseif ($password != $passwordConfirm) {
+    } elseif ($password != $passwordConfirm) { // password一致チェック
         $errorMessage = "Validation failed: Password confirmation doesn't match password";
         sendResponse($errorMessage);
     }
 
     // email重複チェック
-    $selectUserByEmail = Db::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
-    $selectUserByEmail->bindValue(':email', $email, PDO::PARAM_STR);
-    try {
-        $selectUserByEmail->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByEmailFetchAllResult = $selectUserByEmail->fetchAll(PDO::FETCH_ASSOC);
+    $selectUserByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
     if (count($selectUserByEmailFetchAllResult) > 0) {
         $errorMessage = "そのemailは登録されている";
         sendResponse($errorMessage);
     }
 
     // db登録処理
-    $insertUser = Db::getPdo()->prepare('INSERT INTO users SET name = :name, bio = :bio, email = :email, password = :password, token = :token, created_at = NOW()');
-    $insertUser->bindValue(':name', $name, PDO::PARAM_STR);
-    $insertUser->bindValue(':bio', $bio, PDO::PARAM_STR);
-    $insertUser->bindValue(':email', $email, PDO::PARAM_STR);
     $password = hash('sha256', $password); // passwordハッシュ化
-    $insertUser->bindValue(':password', $password, PDO::PARAM_STR);
-    $insertUser->bindValue(':token', $token, PDO::PARAM_STR);
-    try {
-        $insertUser->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
+    Db::insertUser($name, $bio, $email, $password, $token);
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmail = Db::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
-    $selectUserAgainByEmail->bindValue(':email', $email, PDO::PARAM_STR);
-    try {
-        $selectUserAgainByEmail->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserAgainByEmailFetchAllResult = $selectUserAgainByEmail->fetchAll(PDO::FETCH_ASSOC);
+    $selectUserAgainByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
     unset($selectUserAgainByEmailFetchAllResult[0]['password']); // 配列からpassword要素を削除
     sendResponse($selectUserAgainByEmailFetchAllResult[0]);
 }
