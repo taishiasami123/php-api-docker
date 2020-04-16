@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/Db.php';
+require_once dirname(__FILE__) . '/db.php';
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: *');
