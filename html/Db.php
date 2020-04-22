@@ -169,7 +169,7 @@ class Db
     {
         $sql = 'SELECT user_id FROM posts WHERE id = :id';
         $params = [
-            ':id' => [$id, PDO::PARAM_STR],
+            ':id' => [$id, PDO::PARAM_INT],
         ];
         return Db::prepareAndExecute($sql, $params);
     }
