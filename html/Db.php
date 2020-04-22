@@ -199,7 +199,7 @@ class Db
 
     // 機能系
     // 新規登録
-    public static function insertUserDb(string $name, string $bio, string $email, string $password, string $token)
+    public static function insertUserDB(string $name, string $bio, string $email, string $password, string $token)
     {
         $sql = 'INSERT INTO users SET name = :name, bio = :bio, email = :email, password = :password, token = :token, created_at = NOW()';
         $params = [
