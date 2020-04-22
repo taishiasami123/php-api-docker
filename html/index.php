@@ -1,7 +1,8 @@
 <?php
-
+// db.phpを呼び出す
 require_once dirname(__FILE__) . '/db.php';
 
+// CORS対策
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Methods: *');
