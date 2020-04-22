@@ -151,10 +151,10 @@ function timeline($id)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserIdFetchAllResult = Db::selectAllPostWithoutParamsFetchAll($id);
+        $selectPostByUserIdFetchAllResult = Db::selectPostByUserIdWithoutParamsFetchAll($id);
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectPostByUserIdFetchAllResult = Db::selectAllPostWithParamsFetchAll($id, $searchKeyword);
+        $selectPostByUserIdFetchAllResult = Db::selectPostByUserIdWithParamsFetchAll($id, $searchKeyword);
     }
 
     // usersテーブル全体を一旦引っ張る
