@@ -43,7 +43,7 @@ function signUp()
 
     // db登録処理
     $password = hash('sha256', $password); // passwordハッシュ化
-    Db::insertUserDb($name, $bio, $email, $password, $token);
+    Db::insertUserDB($name, $bio, $email, $password, $token);
 
     // dbからemailが一致するレコードを取得して返却
     $selectUserAgainByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
