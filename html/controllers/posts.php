@@ -190,4 +190,6 @@ function deletePost($id)
 
     // postテーブルから削除
     Db::deletePostDB($id);
+    $message = '正常にPost削除されました';
+    sendResponse($message);
 }

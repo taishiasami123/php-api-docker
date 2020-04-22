@@ -120,6 +120,8 @@ function deleteUser($id)
 
     // ユーザー削除
     Db::deleteUserDB($id);
+    $message = '正常にUser削除されました';
+    sendResponse($message);
 }
 
 
