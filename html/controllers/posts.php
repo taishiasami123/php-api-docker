@@ -11,7 +11,7 @@ function postList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
@@ -22,14 +22,14 @@ function postList()
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectAllPostFetchAllResult = db::selectAllPostWithoutParamsFetchAll();
+        $selectAllPostFetchAllResult = Db::selectAllPostWithoutParamsFetchAll();
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectAllPostFetchAllResult = db::selectAllPostWithParamsFetchAll($searchKeyword);
+        $selectAllPostFetchAllResult = Db::selectAllPostWithParamsFetchAll($searchKeyword);
     }
 
     // usersテーブル全体を一旦引っ張る
-    $selectAllUserFetchAllResult = db::selectAllUserFetchAll();
+    $selectAllUserFetchAllResult = Db::selectAllUserFetchAll();
 
     // usersテーブルのidを検索する
     foreach ($selectAllPostFetchAllResult as &$post) {
@@ -78,7 +78,7 @@ function submitPost()
     $text = $params['text'];
 
     // usersテーブルからtokenに紐づくuserのidを拾ってくる
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
 
@@ -89,15 +89,15 @@ function submitPost()
     }
 
     // postsテーブルにinsertする
-    db::insertPostDB($text, $selectedId);
-    $insertedId = db::getPdo()->lastInsertId();
+    Db::insertPostDB($text, $selectedId);
+    $insertedId = Db::getPdo()->lastInsertId();
 
     // insertしたカラムをselectする
-    $selectPostByInsertedIdFetchAllResult = db::selectPostByInsertedIdFetchAllResult($insertedId);
+    $selectPostByInsertedIdFetchAllResult = Db::selectPostByInsertedIdFetchAllResult($insertedId);
     $insertedUserId = $selectPostByInsertedIdFetchAllResult[0]['user_id'];
 
     // insertしたuserをselectする
-    $selectUserByInsertedUserIdFetchAllResult = db::selectUserByInsertedUserIdFetchAll($insertedUserId);
+    $selectUserByInsertedUserIdFetchAllResult = Db::selectUserByInsertedUserIdFetchAll($insertedUserId);
 
     // レスポンスを返す
     $selectPostByInsertedIdFetchAllResult[0]['user'] =& $selectUserByInsertedUserIdFetchAllResult[0];
@@ -121,7 +121,7 @@ function editPost($id)
     $text = $params['text'];
 
     // usersテーブルからtokenに紐づくuserのidを拾ってくる
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
 
@@ -132,7 +132,7 @@ function editPost($id)
     }
 
     // postsテーブルから編集する投稿のuser_idを拾う
-    $selectUserIdByIdFetchAllResult = db::selectUserByIdFetchAll($id);
+    $selectUserIdByIdFetchAllResult = Db::selectUserByIdFetchAll($id);
     $selectedUserId = $selectUserIdByIdFetchAllResult[0]['user_id'];
 
     // ログイン中のidと編集しようとしている投稿のuser_idを突き合わせ
@@ -142,13 +142,13 @@ function editPost($id)
     }
 
     // postsテーブルをupdateする
-    db::updatePostDB($text, $id);
+    Db::updatePostDB($text, $id);
 
     // updateしたカラムをselectする
-    $selectPostByUpdatedPostIdFetchAllResult = db::selectPostByUpdatedPostIdFetchAll($id);
+    $selectPostByUpdatedPostIdFetchAllResult = Db::selectPostByUpdatedPostIdFetchAll($id);
 
     // updateしたuserをselectする
-    $selectUserBySelectedIdFetchAllResult = db::selectUserBySelectedIdFetchAll($selectedId);
+    $selectUserBySelectedIdFetchAllResult = Db::selectUserBySelectedIdFetchAll($selectedId);
 
     // レスポンスを返す
     $selectPostByUpdatedPostIdFetchAllResult[0]['user'] =& $selectUserBySelectedIdFetchAllResult[0];
@@ -169,7 +169,7 @@ function deletePost($id)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
 
@@ -180,7 +180,7 @@ function deletePost($id)
     }
 
     // postsテーブルから削除する投稿のuser_idを拾う
-    $selectUserIdByIdFetchAllResult = db::selectUserByIdFetchAll($id);
+    $selectUserIdByIdFetchAllResult = Db::selectUserByIdFetchAll($id);
 
     // ログイン中のidと削除しようとしている投稿のuser_idを突き合わせ
     if ($selectedId !== $selectUserIdByIdFetchAllResult[0]['user_id']) {
@@ -189,5 +189,5 @@ function deletePost($id)
     }
 
     // postテーブルから削除
-    db::deletePostDB($id);
+    Db::deletePostDB($id);
 }

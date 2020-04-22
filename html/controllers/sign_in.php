@@ -18,7 +18,7 @@ function signIn()
     }
 
     // emailに入力された値と一致する行をdbから拾ってくる
-    $selectUserByEmailFetchAllResult = db::selectUserByEmailFetchAll($email);
+    $selectUserByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
 
     // 一致するものがなかったらエラー吐く
     if (count($selectUserByEmailFetchAllResult) === 0) {
@@ -37,7 +37,7 @@ function signIn()
     }
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmailFetchAllResult = db::selectUserByEmailFetchAll($selectedEmail);
+    $selectUserAgainByEmailFetchAllResult = Db::selectUserByEmailFetchAll($selectedEmail);
     unset($selectUserAgainByEmailFetchAllResult[0]['password']); // 配列からpassword要素を削除
     sendResponse($selectUserAgainByEmailFetchAllResult[0]);
 }

@@ -11,7 +11,7 @@ function userList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
@@ -22,10 +22,10 @@ function userList()
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUserFetchAllResult = db::selectAllUserWithoutParamsFetchAll();
+        $selectUserFetchAllResult = Db::selectAllUserWithoutParamsFetchAll();
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectUserFetchAllResult = db::selectAllUserWithParamsFetchAll($searchKeyword);
+        $selectUserFetchAllResult = Db::selectAllUserWithParamsFetchAll($searchKeyword);
     }
 
     // $page, $limitがブランクだった場合に値を代入
@@ -65,7 +65,7 @@ function editUser($id)
     $bio = $params['bio'];
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
 
@@ -82,10 +82,10 @@ function editUser($id)
     }
 
     // dbのnameとbioをupdateする
-    db::updateUserDB($name, $bio, $id);
+    Db::updateUserDB($name, $bio, $id);
 
     // updateしたレコードを返却
-    $selectUserAgainByIdFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserAgainByIdFetchAllResult = Db::selectUserByTokenFetchAll($token);
     sendResponse($selectUserAgainByIdFetchAllResult[0]);
 }
 
@@ -102,7 +102,7 @@ function deleteUser($id)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
 
@@ -119,7 +119,7 @@ function deleteUser($id)
     }
 
     // ユーザー削除
-    db::deleteUserDB($id);
+    Db::deleteUserDB($id);
 }
 
 
@@ -138,7 +138,7 @@ function timeline($id)
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = db::selectUserByTokenFetchAll($token);
+    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
@@ -149,14 +149,14 @@ function timeline($id)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserIdFetchAllResult = db::selectAllPostWithoutParamsFetchAll($id);
+        $selectPostByUserIdFetchAllResult = Db::selectAllPostWithoutParamsFetchAll($id);
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectPostByUserIdFetchAllResult = db::selectAllPostWithParamsFetchAll($id, $searchKeyword);
+        $selectPostByUserIdFetchAllResult = Db::selectAllPostWithParamsFetchAll($id, $searchKeyword);
     }
 
     // usersテーブル全体を一旦引っ張る
-    $selectUserFetchAllResult = db::selectAllUserFetchAll();
+    $selectUserFetchAllResult = Db::selectAllUserFetchAll();
 
     // usersテーブルのidを検索する
     foreach ($selectPostByUserIdFetchAllResult as &$post) {
