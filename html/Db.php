@@ -16,11 +16,11 @@ class Db
         return self::$pdo;
     }
 
-    // sqlを実行するラッパー関数
-    public static function prepareAndExecute(string $sql, array $params = null, bool $isUpdate = false)
+    // sqlのprepareとbindValueを実行する関数
+    public static function prepareAndBindValue(string $sql, array $params = [])
     {
         $stmt = Db::getPdo()->prepare($sql);
-        if (isset($params)) {
+        if (!empty($params)) {
             // パラメタがある
             foreach ($params as $key => $ary) {
                 $value = $ary[0];
@@ -28,12 +28,21 @@ class Db
                 $stmt->bindValue($key, $value, $type);
             }
         }
-        $result = $stmt->execute();
-        if ($isUpdate) {
-            // 更新系
-            return $result;
-        }
-        // 参照系
+        return $stmt;
+    }
+
+    // sqlのexecuteを実行し結果を返す関数
+    public static function execute(string $sql, array $params = [])
+    {
+        $stmt = self::prepareAndBindValue($sql, $params);
+        return $stmt->execute();
+    }
+
+    // sqlのexecuteとfetchAllを実行しfetchAllの結果を返す関数
+    public static function executeAndFetchAll(string $sql, array $params = [])
+    {
+        $stmt = self::prepareAndBindValue($sql, $params);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -49,7 +58,7 @@ class Db
         $params = [
             ':email' => [$email, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // tokenに合致するユーザーを取得する
@@ -59,7 +68,7 @@ class Db
         $params = [
             ':token' => [$token, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // insertされたuserのidに合致するuserを再度取得する
@@ -69,7 +78,7 @@ class Db
         $params = [
             'id' => [$insertedUserId, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // updateされたuserのidに合致するuserを再度取得する
@@ -79,7 +88,7 @@ class Db
         $params = [
             ':id' => [$selectedId, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
 
@@ -91,14 +100,14 @@ class Db
     public static function selectAllUserFetchAll()
     {
         $sql = 'SELECT * FROM users';
-        return Db::prepareAndExecute($sql);
+        return Db::executeAndFetchAll($sql);
     }
 
     // 更新順でユーザー一覧を取得する
     public static function selectAllUserWithoutParamsFetchAll()
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC';
-        return Db::prepareAndExecute($sql);
+        return Db::executeAndFetchAll($sql);
     }
 
     // 更新順でユーザー一覧を取得する(キーワード検索)
@@ -108,7 +117,7 @@ class Db
         $params = [
             ':searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
 
@@ -120,7 +129,7 @@ class Db
     public static function selectAllPostWithoutParamsFetchAll()
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC';
-        return Db::prepareAndExecute($sql);
+        return Db::executeAndFetchAll($sql);
     }
 
     // 全postを更新順で取得する(キーワード検索)
@@ -130,7 +139,7 @@ class Db
         $params = [
             'searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する
@@ -140,7 +149,7 @@ class Db
         $params = [
             ':userId' => [$id, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する(キーワード検索)
@@ -151,7 +160,7 @@ class Db
             ':userId' => [$id, PDO::PARAM_INT],
             ':searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // insertされたpostのidに合致するpostを再度取得する
@@ -161,7 +170,7 @@ class Db
         $params = [
             'id' => [$insertedId, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // idに合致するuser_idを持つカラムを選択する
@@ -171,7 +180,7 @@ class Db
         $params = [
             ':id' => [$id, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
     // updateされたpostを再度取得する
@@ -181,7 +190,7 @@ class Db
         $params = [
             ':id' => [$id, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::executeAndFetchAll($sql, $params);
     }
 
 
@@ -200,7 +209,7 @@ class Db
             ':password' => [$password, PDO::PARAM_STR],
             ':token' => [$token, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params, true);
+        return Db::execute($sql, $params);
     }
 
     // ユーザー編集
@@ -212,7 +221,7 @@ class Db
             ':bio' => [$bio, PDO::PARAM_STR],
             ':id' => [$id, PDO::PARAM_STR],
         ];
-        return Db::prepareAndExecute($sql, $params, true);
+        return Db::execute($sql, $params);
     }
 
     // ユーザー削除
@@ -222,7 +231,7 @@ class Db
         $params = [
             ':id' => [$id, PDO::PARAM_STR],
         ];
-        Db::prepareAndExecute($sql, $params, false);
+        return Db::execute($sql, $params);
     }
 
     // 投稿作成
@@ -233,7 +242,7 @@ class Db
             ':text' => [$text, PDO::PARAM_STR],
             ':userId' => [$selectedId, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params, true);
+        return Db::execute($sql, $params);
     }
 
     // 投稿編集
@@ -244,7 +253,7 @@ class Db
             ':text' => [$text, PDO::PARAM_STR],
             ':id' => [$id, PDO::PARAM_INT],
         ];
-        return Db::prepareAndExecute($sql, $params);
+        return Db::execute($sql, $params);
     }
 
     // 投稿削除
@@ -254,6 +263,6 @@ class Db
         $params = [
             ':id' => [$id, PDO::PARAM_INT],
         ];
-        Db::prepareAndExecute($sql, $params, false);
+        return Db::execute($sql, $params, false);
     }
 }
