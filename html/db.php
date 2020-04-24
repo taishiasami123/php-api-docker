@@ -31,7 +31,7 @@ class Db
         return $stmt;
     }
 
-    // sqlのexecuteを実行し結果を返す関数
+    // sqlのexecuteを実行しexecuteの結果を返す関数
     public static function execute(string $sql, array $params = [])
     {
         $stmt = self::prepareAndBindValue($sql, $params);
