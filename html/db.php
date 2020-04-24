@@ -52,7 +52,7 @@ class Db
 
     // selectUser系，特定のユーザーを取得するもの
     // emailに合致するユーザを取得する
-    public static function selectUserByEmailFetchAll(string $email)
+    public static function selectUserByEmailFromUsersFetchAll(string $email)
     {
         $sql = 'SELECT * FROM users WHERE email = :email';
         $params = [
@@ -62,7 +62,7 @@ class Db
     }
 
     // tokenに合致するユーザーを取得する
-    public static function selectUserByTokenFetchAll(string $token)
+    public static function selectUserByTokenFromUsersFetchAll(string $token)
     {
         $sql = 'SELECT * FROM users WHERE token = :token';
         $params = [
@@ -87,21 +87,21 @@ class Db
 
     // selectUser系，全てのユーザーを取得するもの
     // 全userを取得する
-    public static function selectAllUserFetchAll()
+    public static function selectAllUserFromUsersFetchAll()
     {
         $sql = 'SELECT * FROM users';
         return Db::executeAndFetchAll($sql);
     }
 
     // 更新順でユーザー一覧を取得する
-    public static function selectAllUserWithoutParamsFetchAll()
+    public static function selectAllUserFromUsersWithoutParamsFetchAll()
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC';
         return Db::executeAndFetchAll($sql);
     }
 
     // 更新順でユーザー一覧を取得する(キーワード検索)
-    public static function selectAllUserWithParamsFetchAll(string $searchKeyword)
+    public static function selectAllUserFromUsersWithParamsFetchAll(string $searchKeyword)
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
@@ -116,14 +116,14 @@ class Db
 
     // selectPost系
     // 全postを更新順で取得する
-    public static function selectAllPostWithoutParamsFetchAll()
+    public static function selectAllPostFromPostsWithoutParamsFetchAll()
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC';
         return Db::executeAndFetchAll($sql);
     }
 
     // 全postを更新順で取得する(キーワード検索)
-    public static function selectAllPostWithParamsFetchAll(string $searchKeyword)
+    public static function selectAllPostFromPostsWithParamsFetchAll(string $searchKeyword)
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
@@ -133,7 +133,7 @@ class Db
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する
-    public static function selectPostByUserIdWithoutParamsFetchAll(int $id)
+    public static function selectPostByUserIdFromPostsWithoutParamsFetchAll(int $userId)
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC';
         $params = [
@@ -143,7 +143,7 @@ class Db
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する(キーワード検索)
-    public static function selectPostByUserIdWithParamsFetchAll(int $id, string $searchKeyword)
+    public static function selectPostByUserIdFromPostsWithParamsFetchAll(int $userId, string $searchKeyword)
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
@@ -153,8 +153,8 @@ class Db
         return Db::executeAndFetchAll($sql, $params);
     }
 
-    // insertされたpostのidに合致するpostを再度取得する
-    public static function selectPostByInsertedIdFetchAllResult(int $insertedId)
+    // idに合致するカラムをpostsテーブルから取得する
+    public static function selectPostByPostIdFromPostsFetchAll(int $postId)
     {
         $sql = 'SELECT * FROM posts WHERE id = :id';
         $params = [
@@ -169,7 +169,7 @@ class Db
 
     // 機能系
     // 新規登録
-    public static function insertUserDB(string $name, string $bio, string $email, string $password, string $token)
+    public static function insertUserToUsers(string $name, string $bio, string $email, string $password, string $token)
     {
         $sql = 'INSERT INTO users SET name = :name, bio = :bio, email = :email, password = :password, token = :token, created_at = NOW()';
         $params = [
@@ -183,7 +183,7 @@ class Db
     }
 
     // ユーザー編集
-    public static function updateUserDB(string $name, string $bio, int $id)
+    public static function updateUserSetUsers(string $name, string $bio, int $userId)
     {
         $sql = 'UPDATE users SET name = :name, bio = :bio WHERE id = :id';
         $params = [
@@ -195,7 +195,7 @@ class Db
     }
 
     // ユーザー削除
-    public static function deleteUserDB(int $id)
+    public static function deleteUserFromUsers(int $userId)
     {
         $sql = 'DELETE FROM users WHERE id = :id';
         $params = [
@@ -205,7 +205,7 @@ class Db
     }
 
     // 投稿作成
-    public static function insertPostDB(string $text, int $selectedId)
+    public static function insertPostIntoPostsAndReturnInsertedPostId(string $text, int $userIdFromUsersTable)
     {
         $sql = 'INSERT INTO posts SET text = :text, user_id = :userId, created_at = NOW()';
         $params = [
@@ -216,7 +216,7 @@ class Db
     }
 
     // 投稿編集
-    public static function updatePostDb(string $text, int $id)
+    public static function updatePostSetPosts(string $text, int $postId)
     {
         $sql = 'UPDATE posts SET text = :text WHERE id = :id';
         $params = [
@@ -227,7 +227,7 @@ class Db
     }
 
     // 投稿削除
-    public static function deletePostDB($id)
+    public static function deletePostFromPosts(int $postId)
     {
         $sql = 'DELETE FROM posts WHERE id = :id';
         $params = [

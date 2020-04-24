@@ -11,8 +11,8 @@ function postList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
 
     // tokenが見つからなかったらエラー吐く
     if ($selectedToken === null) {
@@ -78,9 +78,9 @@ function submitPost()
     $text = $params['text'];
 
     // usersテーブルからtokenに紐づくuserのidを拾ってくる
-    $selectUserByTokenFetchAllResult = Db::selectUserByTokenFetchAll($token);
     $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
     $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
 
     // tokenが見つからなかったらエラー吐く
     if ($selectedToken === null) {
@@ -93,11 +93,11 @@ function submitPost()
     $insertedId = Db::getPdo()->lastInsertId();
 
     // insertしたカラムをselectする
-    $selectPostByInsertedIdFetchAllResult = Db::selectPostByInsertedIdFetchAllResult($insertedId);
     $insertedUserId = $selectPostByInsertedIdFetchAllResult[0]['user_id'];
+    $selectPostByInsertedIdFromPostsFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($insertedPostId);
 
     // insertしたuserをselectする
-    $selectUserByInsertedUserIdFetchAllResult = Db::selectUserByInsertedUserIdFetchAll($insertedUserId);
+    $selectUserByInsertedUserIdFetchAllResult = Db::selectUserByUserIdFromUsersFetchAll($insertedUserId);
 
     // レスポンスを返す
     $selectPostByInsertedIdFetchAllResult[0]['user'] =& $selectUserByInsertedUserIdFetchAllResult[0];

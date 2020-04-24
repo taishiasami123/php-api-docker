@@ -35,18 +35,18 @@ function signUp()
     }
 
     // email重複チェック
-    $selectUserByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
     if (count($selectUserByEmailFetchAllResult) > 0) {
+    $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
         $errorMessage = 'そのemailは登録されている';
         sendResponse($errorMessage);
     }
 
     // db登録処理
     $password = hash('sha256', $password); // passwordハッシュ化
-    Db::insertUserDB($name, $bio, $email, $password, $token);
+    Db::insertUserToUsers($name, $bio, $email, $password, $token);
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
     unset($selectUserAgainByEmailFetchAllResult[0]['password']); // 配列からpassword要素を削除
     sendResponse($selectUserAgainByEmailFetchAllResult[0]);
+    $selectUserAgainByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
 }
