@@ -22,10 +22,10 @@ function postList()
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectAllPostFromPostsFetchAllResult = Db::selectAllPostFromPostsWithoutParamsFetchAll();
+        $selectAllPostFromPostsFetchAllResult = Db::selectAllPostFromPostsWithoutParamsFetchAllForPublic();
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectAllPostFromPostsFetchAllResult = Db::selectAllPostFromPostsWithParamsFetchAll($searchKeyword);
+        $selectAllPostFromPostsFetchAllResult = Db::selectAllPostFromPostsWithParamsFetchAllForPublic($searchKeyword);
     }
 
     // usersテーブル全体を一旦引っ張る
@@ -96,10 +96,10 @@ function submitPost()
     $insertedUserId = $selectPostByInsertedIdFromPostsFetchAllResult[0]['user_id'];
 
     // insertしたuserをselectする
-    $selectUserByInsertedUserIdFetchAllResult = Db::selectUserByUserIdFromUsersFetchAll($insertedUserId);
+    $selectUserByInsertedUserIdFetchAllResult = Db::selectUserByUserIdFromUsersFetchAllForPublic($insertedUserId);
 
     // レスポンスを返す
-    $selectPostByInsertedIdFromPostsFetchAllResult[0]['user'] =& $selectUserByInsertedUserIdFetchAllResult[0];
+    $selectPostByInsertedIdFromPostsFetchAllResult[0]['user'] = &$selectUserByInsertedUserIdFetchAllResult[0];
     unset($selectPostByInsertedIdFromPostsFetchAllResult[0]['user_id']);
     sendResponse($selectPostByInsertedIdFromPostsFetchAllResult[0]);
 }
@@ -147,10 +147,10 @@ function editPost($postId)
     $selectPostAgainByPostIdFromPostsFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($postId);
 
     // updateしたuserをselectする
-    $selectUserBySelectedIdFetchAllResult = Db::selectUserByUserIdFromUsersFetchAll($userIdFromUsersTable);
+    $selectUserBySelectedIdFetchAllResult = Db::selectUserByUserIdFromUsersFetchAllForPublic($userIdFromUsersTable);
 
     // レスポンスを返す
-    $selectPostAgainByPostIdFromPostsFetchAllResult[0]['user'] =& $selectUserBySelectedIdFetchAllResult[0];
+    $selectPostAgainByPostIdFromPostsFetchAllResult[0]['user'] = &$selectUserBySelectedIdFetchAllResult[0];
     unset($selectPostAgainByPostIdFromPostsFetchAllResult[0]['user_id']);
     sendResponse($selectPostAgainByPostIdFromPostsFetchAllResult[0]);
 }

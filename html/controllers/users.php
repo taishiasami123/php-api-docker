@@ -22,10 +22,10 @@ function userList()
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithoutParamsFetchAll();
+        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithoutParamsFetchAllForPublic();
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithParamsFetchAll($searchKeyword);
+        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithParamsFetchAllForPublic($searchKeyword);
     }
 
     // $page, $limitがブランクだった場合に値を代入
@@ -151,10 +151,10 @@ function timeline($userId)
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithoutParamsFetchAll($userId);
+        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithoutParamsFetchAllForPublic($userId);
     } else {
         $searchKeyword = '%' . $keyword . '%';
-        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithParamsFetchAll($userId, $searchKeyword);
+        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithParamsFetchAllForPublic($userId, $searchKeyword);
     }
 
     // usersテーブル全体を一旦引っ張る

@@ -72,7 +72,7 @@ class Db
     }
 
     // user idに合致するユーザーを取得する
-    public static function selectUserByUserIdFromUsersFetchAll(int $userId)
+    public static function selectUserByUserIdFromUsersFetchAllForPublic(int $userId)
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id';
         $params = [
@@ -94,14 +94,14 @@ class Db
     }
 
     // 更新順でユーザー一覧を取得する
-    public static function selectAllUserFromUsersWithoutParamsFetchAll()
+    public static function selectAllUserFromUsersWithoutParamsFetchAllForPublic()
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC';
         return Db::executeAndFetchAll($sql);
     }
 
     // 更新順でユーザー一覧を取得する(キーワード検索)
-    public static function selectAllUserFromUsersWithParamsFetchAll(string $searchKeyword)
+    public static function selectAllUserFromUsersWithParamsFetchAllForPublic(string $searchKeyword)
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
@@ -116,14 +116,14 @@ class Db
 
     // selectPost系
     // 全postを更新順で取得する
-    public static function selectAllPostFromPostsWithoutParamsFetchAll()
+    public static function selectAllPostFromPostsWithoutParamsFetchAllForPublic()
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts ORDER BY updated_at DESC';
         return Db::executeAndFetchAll($sql);
     }
 
     // 全postを更新順で取得する(キーワード検索)
-    public static function selectAllPostFromPostsWithParamsFetchAll(string $searchKeyword)
+    public static function selectAllPostFromPostsWithParamsFetchAllForPublic(string $searchKeyword)
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
@@ -133,7 +133,7 @@ class Db
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する
-    public static function selectPostByUserIdFromPostsWithoutParamsFetchAll(int $userId)
+    public static function selectPostByUserIdFromPostsWithoutParamsFetchAllForPublic(int $userId)
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC';
         $params = [
@@ -143,7 +143,7 @@ class Db
     }
 
     // ユーザーIDに合致するカラムをpostsテーブルから取得する(キーワード検索)
-    public static function selectPostByUserIdFromPostsWithParamsFetchAll(int $userId, string $searchKeyword)
+    public static function selectPostByUserIdFromPostsWithParamsFetchAllForPublic(int $userId, string $searchKeyword)
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
