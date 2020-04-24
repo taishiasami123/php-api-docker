@@ -127,7 +127,7 @@ class Db
     {
         $sql = 'SELECT id, text, user_id, created_at, updated_at FROM posts WHERE text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
-            'searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
+            ':searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
         ];
         return Db::executeAndFetchAll($sql, $params);
     }
