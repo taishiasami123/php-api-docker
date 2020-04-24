@@ -110,7 +110,7 @@ function submitPost()
 
 
 // ---------- 投稿編集機能 ----------
-function editPost($id)
+function editPost($postId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -142,7 +142,7 @@ function editPost($id)
     }
 
     // postsテーブルをupdateする
-    Db::updatePostDB($text, $id);
+    Db::updatePostSetPosts($text, $postId);
 
     // updateしたカラムをselectする
     $selectPostByUpdatedPostIdFetchAllResult = Db::selectPostByUpdatedPostIdFetchAll($id);
@@ -161,7 +161,7 @@ function editPost($id)
 
 
 // ---------- 投稿削除機能 ----------
-function deletePost($id)
+function deletePost($postId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -189,7 +189,7 @@ function deletePost($id)
     }
 
     // postテーブルから削除
-    Db::deletePostDB($id);
+    Db::deletePostFromPosts($postId);
     $message = '正常にPost削除されました';
     sendResponse($message);
 }

@@ -53,7 +53,7 @@ function userList()
 
 
 // ---------- ユーザー編集機能 ----------
-function editUser($id)
+function editUser($userId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -94,7 +94,7 @@ function editUser($id)
 
 
 // ---------- ユーザー削除機能 ----------
-function deleteUser($id)
+function deleteUser($userId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -119,7 +119,7 @@ function deleteUser($id)
     }
 
     // ユーザー削除
-    Db::deleteUserDB($id);
+    Db::deleteUserFromUsers($userId);
     $message = '正常にUser削除されました';
     sendResponse($message);
 }
@@ -129,7 +129,7 @@ function deleteUser($id)
 
 
 // ---------- タイムライン機能 ----------
-function timeline($id)
+function timeline($userId)
 {
     // jsonを取得
     $header = getallheaders();

@@ -137,7 +137,7 @@ class Db
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC';
         $params = [
-            ':userId' => [$id, PDO::PARAM_INT],
+            ':userId' => [$userId, PDO::PARAM_INT],
         ];
         return Db::executeAndFetchAll($sql, $params);
     }
@@ -147,7 +147,7 @@ class Db
     {
         $sql = 'SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC';
         $params = [
-            ':userId' => [$id, PDO::PARAM_INT],
+            ':userId' => [$userId, PDO::PARAM_INT],
             ':searchKeyword' => [$searchKeyword, PDO::PARAM_STR],
         ];
         return Db::executeAndFetchAll($sql, $params);
@@ -189,7 +189,7 @@ class Db
         $params = [
             ':name' => [$name, PDO::PARAM_STR],
             ':bio' => [$bio, PDO::PARAM_STR],
-            ':id' => [$id, PDO::PARAM_STR],
+            ':id' => [$userId, PDO::PARAM_STR],
         ];
         return Db::execute($sql, $params);
     }
@@ -199,7 +199,7 @@ class Db
     {
         $sql = 'DELETE FROM users WHERE id = :id';
         $params = [
-            ':id' => [$id, PDO::PARAM_STR],
+            ':id' => [$userId, PDO::PARAM_STR],
         ];
         return Db::execute($sql, $params);
     }
@@ -210,7 +210,7 @@ class Db
         $sql = 'INSERT INTO posts SET text = :text, user_id = :userId, created_at = NOW()';
         $params = [
             ':text' => [$text, PDO::PARAM_STR],
-            ':userId' => [$selectedId, PDO::PARAM_INT],
+            ':userId' => [$userIdFromUsersTable, PDO::PARAM_INT],
         ];
         return Db::execute($sql, $params);
     }
@@ -221,7 +221,7 @@ class Db
         $sql = 'UPDATE posts SET text = :text WHERE id = :id';
         $params = [
             ':text' => [$text, PDO::PARAM_STR],
-            ':id' => [$id, PDO::PARAM_INT],
+            ':id' => [$postId, PDO::PARAM_INT],
         ];
         return Db::execute($sql, $params);
     }
@@ -231,7 +231,7 @@ class Db
     {
         $sql = 'DELETE FROM posts WHERE id = :id';
         $params = [
-            ':id' => [$id, PDO::PARAM_INT],
+            ':id' => [$postId, PDO::PARAM_INT],
         ];
         return Db::execute($sql, $params, false);
     }
