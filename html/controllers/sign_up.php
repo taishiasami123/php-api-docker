@@ -3,7 +3,7 @@
 function signUp()
 {
     // jsonを取得
-    $json = file_get_contents("php://input");
+    $json = file_get_contents('php://input');
     $params = json_decode($json, true)['sign_up_user_params'];
     $name = $params['name'];
     $bio = $params['bio'];
@@ -12,21 +12,21 @@ function signUp()
     $passwordConfirm = $params['password_confirmation'];
 
     // token生成
-    $salt = "phpapi";
+    $salt = 'phpapi';
     $seed = $salt . $email;
     $token = hash('sha256', $seed);
 
     // blankチェック
-    if ($name === "") {
+    if ($name === '') {
         $errorMessage = "Validation failed: Name can't be blank";
         sendResponse($errorMessage);
-    } elseif ($bio === "") {
+    } elseif ($bio === '') {
         $errorMessage = "Validation failed: Bio can't be blank";
         sendResponse($errorMessage);
-    } elseif ($email === "") {
+    } elseif ($email === '') {
         $errorMessage = "Validation failed: Email can't be blank";
         sendResponse($errorMessage);
-    } elseif ($password === "") {
+    } elseif ($password === '') {
         $errorMessage = "Validation failed: Password can't be blank";
         sendResponse($errorMessage);
     } elseif ($password != $passwordConfirm) { // password一致チェック
@@ -35,18 +35,18 @@ function signUp()
     }
 
     // email重複チェック
-    $selectUserByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
-    if (count($selectUserByEmailFetchAllResult) > 0) {
-        $errorMessage = "そのemailは登録されている";
+    $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
+    if (count($selectUserByEmailFromUsersFetchAllResult) > 0) {
+        $errorMessage = 'そのemailは登録されている';
         sendResponse($errorMessage);
     }
 
     // db登録処理
     $password = hash('sha256', $password); // passwordハッシュ化
-    Db::insertUser($name, $bio, $email, $password, $token);
+    Db::insertUserToUsers($name, $bio, $email, $password, $token);
 
     // dbからemailが一致するレコードを取得して返却
-    $selectUserAgainByEmailFetchAllResult = Db::selectUserByEmailFetchAll($email);
-    unset($selectUserAgainByEmailFetchAllResult[0]['password']); // 配列からpassword要素を削除
-    sendResponse($selectUserAgainByEmailFetchAllResult[0]);
+    $selectUserAgainByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
+    unset($selectUserAgainByEmailFromUsersFetchAllResult[0]['password']); // 配列からpassword要素を削除
+    sendResponse($selectUserAgainByEmailFromUsersFetchAllResult[0]);
 }

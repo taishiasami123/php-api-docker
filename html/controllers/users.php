@@ -11,42 +11,28 @@ function userList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = Db::getPdo()->prepare('SELECT token FROM users WHERE token = :token');
-    $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
-    try {
-        $selectUserByToken->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByTokenFetchAllResult = $selectUserByToken->fetchAll(PDO::FETCH_ASSOC);
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
-        $errorMessage = "tokenがおかしい";
+    if ($tokenFromUsersTable === null) {
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // tokenが見つかったらユーザー一覧引っ張る
     if ($keyword === '') {
-        $selectUser = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users ORDER BY updated_at DESC');
+        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithoutParamsFetchAllForPublic();
     } else {
-        $selectUser = Db::getPdo()->prepare('SELECT id, name, bio, created_at, updated_at FROM users WHERE name LIKE :searchKeyword OR bio LIKE :searchKeyword ORDER BY updated_at DESC');
         $searchKeyword = '%' . $keyword . '%';
-        $selectUser->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
+        $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersWithParamsFetchAllForPublic($searchKeyword);
     }
-    try {
-        $selectUser->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserFetchAllResult = $selectUser->fetchAll(PDO::FETCH_ASSOC);
 
     // $page, $limitがブランクだった場合に値を代入
-    if ($page === "") {
+    if ($page === '') {
         $page = 1;
     }
-    if ($limit === "") {
+    if ($limit === '') {
         $limit = 25;
     }
 
@@ -56,73 +42,59 @@ function userList()
 
     // 結果の配列を受け取る変数を作って，そいつを返す
     $returnResult = [];
-    for ($i = $startPoint; $i <= $endPoint && $i < count($selectUserFetchAllResult); $i++) {
-        $returnResult[] = $selectUserFetchAllResult[$i];
+    for ($i = $startPoint; $i <= $endPoint && $i < count($selectUserFromUsersFetchAllResult); $i++) {
+        $returnResult[] = $selectUserFromUsersFetchAllResult[$i];
     }
     sendResponse($returnResult);
 }
 
+
+
+
+
 // ---------- ユーザー編集機能 ----------
-function editUser($id)
+function editUser($userId)
 {
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
-    $json = file_get_contents("php://input");
+    $json = file_get_contents('php://input');
     $params = json_decode($json, true)['user_params'];
     $name = $params['name'];
     $bio = $params['bio'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
-    $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
-    try {
-        $selectUserByToken->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByTokenFetchAllResult = $selectUserByToken->fetchAll(PDO::FETCH_ASSOC);
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
-    $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
-        $errorMessage = "tokenがおかしい";
+    if ($tokenFromUsersTable === null) {
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
-    if ($id !== $selectedId) {
+    if ($userId !== $userIdFromUsersTable) {
         $errorMessage = '自分のユーザーじゃないよ!';
         sendResponse($errorMessage);
     }
 
     // dbのnameとbioをupdateする
-    $updateUser = Db::getPdo()->prepare('UPDATE users SET name = :name, bio = :bio WHERE id = :id');
-    $updateUser->bindValue(':id', $id, PDO::PARAM_INT);
-    $updateUser->bindValue(':name', $name, PDO::PARAM_STR);
-    $updateUser->bindValue(':bio', $bio, PDO::PARAM_STR);
-    try {
-        $updateUser->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
+    Db::updateUserSetUsers($name, $bio, $userId);
 
     // updateしたレコードを返却
-    $selectUserById = Db::getPdo()->prepare('SELECT id, name, bio, email, created_at, updated_at FROM users WHERE id = :id');
-    $selectUserById->bindValue(':id', $id, PDO::PARAM_INT);
-    try {
-        $selectUserById->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByIdFetchAllResult = $selectUserById->fetchAll(PDO::FETCH_ASSOC);
-    sendResponse($selectUserByIdFetchAllResult[0]);
+    $selectUserAgainByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    sendResponse($selectUserAgainByTokenFromUsersFetchAllResult[0]);
 }
 
+
+
+
+
 // ---------- ユーザー削除機能 ----------
-function deleteUser($id)
+function deleteUser($userId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -130,42 +102,34 @@ function deleteUser($id)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectUserByToken = Db::getPdo()->prepare('SELECT id, token FROM users WHERE token = :token');
-    $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
-    try {
-        $selectUserByToken->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByTokenFetchAllResult = $selectUserByToken->fetchAll(PDO::FETCH_ASSOC);
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
-    $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
-        $errorMessage = "tokenがおかしい";
+    if ($tokenFromUsersTable === null) {
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
-    if ($id !== $selectedId) {
+    if ($userId !== $userIdFromUsersTable) {
         $errorMessage = '自分のユーザーじゃないよ!';
         sendResponse($errorMessage);
     }
 
-    $deleteUser = Db::getPdo()->prepare('DELETE FROM users WHERE id = :id');
-    $deleteUser->bindValue(':id', $id, PDO::PARAM_STR);
-    try {
-        $deleteUser->execute();
-        $msg = '正常にUser削除されました';
-        sendResponse($msg);
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
+    // ユーザー削除
+    Db::deleteUserFromUsers($userId);
+    $message = '正常にUser削除されました';
+    sendResponse($message);
 }
 
+
+
+
+
 // ---------- タイムライン機能 ----------
-function timeline($id)
+function timeline($userId)
 {
     // jsonを取得
     $header = getallheaders();
@@ -176,51 +140,29 @@ function timeline($id)
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectUserByToken = Db::getPdo()->prepare('SELECT token FROM users WHERE token = :token');
-    $selectUserByToken->bindValue(':token', $token, PDO::PARAM_STR);
-    try {
-        $selectUserByToken->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserByTokenFetchAllResult = $selectUserByToken->fetchAll(PDO::FETCH_ASSOC);
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
+    $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
-        $errorMessage = "tokenがおかしい";
+    if ($tokenFromUsersTable === null) {
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // tokenが見つかったら投稿一覧引っ張る
     if ($keyword === '') {
-        $selectPostByUserId = Db::getPdo()->prepare('SELECT * FROM posts WHERE user_id = :userId ORDER BY updated_at DESC');
-        $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
+        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithoutParamsFetchAllForPublic($userId);
     } else {
-        $selectPostByUserId = Db::getPdo()->prepare('SELECT * FROM posts WHERE user_id = :userId AND text LIKE :searchKeyword ORDER BY updated_at DESC');
-        $selectPostByUserId->bindValue(':userId', $id, PDO::PARAM_INT);
         $searchKeyword = '%' . $keyword . '%';
-        $selectPostByUserId->bindValue(':searchKeyword', $searchKeyword, PDO::PARAM_STR);
+        $selectPostByUserIdFromPostsFetchAllResult = Db::selectPostByUserIdFromPostsWithParamsFetchAllForPublic($userId, $searchKeyword);
     }
-    try {
-        $selectPostByUserId->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectPostByUserIdFetchAllResult = $selectPostByUserId->fetchAll(PDO::FETCH_ASSOC);
 
     // usersテーブル全体を一旦引っ張る
-    $selectUser = Db::getPdo()->prepare('SELECT * FROM users');
-    try {
-        $selectUser->execute();
-    } catch (Exception $e) {
-        sendResponse($e);
-    }
-    $selectUserFetchAllResult = $selectUser->fetchAll(PDO::FETCH_ASSOC);
+    $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersFetchAll();
 
     // usersテーブルのidを検索する
-    foreach ($selectPostByUserIdFetchAllResult as &$post) {
-        foreach ($selectUserFetchAllResult as $user) {
+    foreach ($selectPostByUserIdFromPostsFetchAllResult as &$post) {
+        foreach ($selectUserFromUsersFetchAllResult as $user) {
             if ($user['id'] === $post['user_id']) {
                 unset($post['user_id'], $user['email'], $user['password'], $user['token']);
                 $post['user'] = $user;
@@ -230,10 +172,10 @@ function timeline($id)
     }
 
     // $page, $limitがブランクだった場合に値を代入
-    if ($page === "") {
+    if ($page === '') {
         $page = 1;
     }
-    if ($limit === "") {
+    if ($limit === '') {
         $limit = 25;
     }
 
@@ -243,8 +185,8 @@ function timeline($id)
 
     // 結果の配列を受け取る変数を作って，そいつを返す
     $returnResult = [];
-    for ($i = $startPoint; $i <= $endPoint && $i < count($selectPostByUserIdFetchAllResult); $i++) {
-        $returnResult[] = $selectPostByUserIdFetchAllResult[$i];
+    for ($i = $startPoint; $i <= $endPoint && $i < count($selectPostByUserIdFromPostsFetchAllResult); $i++) {
+        $returnResult[] = $selectPostByUserIdFromPostsFetchAllResult[$i];
     }
     sendResponse($returnResult);
 }
