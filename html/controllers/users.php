@@ -11,11 +11,11 @@ function userList()
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
+    if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
@@ -42,8 +42,8 @@ function userList()
 
     // 結果の配列を受け取る変数を作って，そいつを返す
     $returnResult = [];
-    for ($i = $startPoint; $i <= $endPoint && $i < count($selectUserFetchAllResult); $i++) {
-        $returnResult[] = $selectUserFetchAllResult[$i];
+    for ($i = $startPoint; $i <= $endPoint && $i < count($selectUserFromUsersFetchAllResult); $i++) {
+        $returnResult[] = $selectUserFromUsersFetchAllResult[$i];
     }
     sendResponse($returnResult);
 }
@@ -65,28 +65,28 @@ function editUser($userId)
     $bio = $params['bio'];
 
     // dbにtokenを探しに行く
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
-    $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
+    if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
-    if ($id !== $selectedId) {
+    if ($userId !== $userIdFromUsersTable) {
         $errorMessage = '自分のユーザーじゃないよ!';
         sendResponse($errorMessage);
     }
 
     // dbのnameとbioをupdateする
-    Db::updateUserDB($name, $bio, $id);
+    Db::updateUserSetUsers($name, $bio, $userId);
 
     // updateしたレコードを返却
-    sendResponse($selectUserAgainByIdFetchAllResult[0]);
     $selectUserAgainByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    sendResponse($selectUserAgainByTokenFromUsersFetchAllResult[0]);
 }
 
 
@@ -102,18 +102,18 @@ function deleteUser($userId)
     $token = substr($bearerToken, 7, strlen($bearerToken) - 7);
 
     // dbにtokenを探しに行く
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
-    $selectedId = $selectUserByTokenFetchAllResult[0]['id'];
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
+    if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
-    if ($id !== $selectedId) {
+    if ($userId !== $userIdFromUsersTable) {
         $errorMessage = '自分のユーザーじゃないよ!';
         sendResponse($errorMessage);
     }
@@ -140,11 +140,11 @@ function timeline($userId)
     $keyword = $_GET['query'];
 
     // dbにtokenを探しに行く
-    $selectedToken = $selectUserByTokenFetchAllResult[0]['token'];
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
+    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($selectedToken === null) {
+    if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
@@ -161,8 +161,8 @@ function timeline($userId)
     $selectUserFromUsersFetchAllResult = Db::selectAllUserFromUsersFetchAll();
 
     // usersテーブルのidを検索する
-    foreach ($selectPostByUserIdFetchAllResult as &$post) {
-        foreach ($selectUserFetchAllResult as $user) {
+    foreach ($selectPostByUserIdFromPostsFetchAllResult as &$post) {
+        foreach ($selectUserFromUsersFetchAllResult as $user) {
             if ($user['id'] === $post['user_id']) {
                 unset($post['user_id'], $user['email'], $user['password'], $user['token']);
                 $post['user'] = $user;
@@ -185,8 +185,8 @@ function timeline($userId)
 
     // 結果の配列を受け取る変数を作って，そいつを返す
     $returnResult = [];
-    for ($i = $startPoint; $i <= $endPoint && $i < count($selectPostByUserIdFetchAllResult); $i++) {
-        $returnResult[] = $selectPostByUserIdFetchAllResult[$i];
+    for ($i = $startPoint; $i <= $endPoint && $i < count($selectPostByUserIdFromPostsFetchAllResult); $i++) {
+        $returnResult[] = $selectPostByUserIdFromPostsFetchAllResult[$i];
     }
     sendResponse($returnResult);
 }

@@ -21,23 +21,23 @@ function signIn()
     $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
 
     // 一致するものがなかったらエラー吐く
-    if (count($selectUserByEmailFetchAllResult) === 0) {
+    if (count($selectUserByEmailFromUsersFetchAllResult) === 0) {
         $errorMessage = 'そのemailもしくはpasswordが違います';
         sendResponse($errorMessage);
     }
 
     // 一致するものがあったら値取り出す
-    $selectedEmail = $selectUserByEmailFetchAllResult[0]['email'];
-    $selectedPassword = $selectUserByEmailFetchAllResult[0]['password'];
+    $emailFromUserTable = $selectUserByEmailFromUsersFetchAllResult[0]['email'];
+    $passwordFromUsersTable = $selectUserByEmailFromUsersFetchAllResult[0]['password'];
 
     // パスワード一致チェック
-    if ($password !== $passwordConfirm || $password !== $selectedPassword) {
+    if ($password !== $passwordConfirm || $password !== $passwordFromUsersTable) {
         $errorMessage = 'そのemailもしくはpasswordが違います';
         sendResponse($errorMessage);
     }
 
     // dbからemailが一致するレコードを取得して返却
-    unset($selectUserAgainByEmailFetchAllResult[0]['password']); // 配列からpassword要素を削除
-    sendResponse($selectUserAgainByEmailFetchAllResult[0]);
     $selectUserAgainByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($emailFromUserTable);
+    unset($selectUserAgainByEmailFromUsersFetchAllResult[0]['password']); // 配列からpassword要素を削除
+    sendResponse($selectUserAgainByEmailFromUsersFetchAllResult[0]);
 }
