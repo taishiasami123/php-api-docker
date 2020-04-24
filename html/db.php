@@ -237,6 +237,6 @@ class Db
         $params = [
             ':id' => [$postId, PDO::PARAM_INT],
         ];
-        return Db::execute($sql, $params, false);
+        return Db::execute($sql, $params);
     }
 }
