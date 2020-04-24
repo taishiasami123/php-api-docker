@@ -212,7 +212,11 @@ class Db
             ':text' => [$text, PDO::PARAM_STR],
             ':userId' => [$userIdFromUsersTable, PDO::PARAM_INT],
         ];
-        return Db::execute($sql, $params);
+        if (Db::execute($sql, $params)) {
+            return Db::getPdo()->lastInsertId();
+        } else {
+            return null;
+        }
     }
 
     // 投稿編集

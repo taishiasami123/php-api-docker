@@ -89,8 +89,7 @@ function submitPost()
     }
 
     // postsテーブルにinsertする
-    Db::insertPostDB($text, $selectedId);
-    $insertedId = Db::getPdo()->lastInsertId();
+    $insertedPostId = Db::insertPostIntoPostsAndReturnInsertedPostId($text, $userIdFromUsersTable);
 
     // insertしたカラムをselectする
     $insertedUserId = $selectPostByInsertedIdFetchAllResult[0]['user_id'];
