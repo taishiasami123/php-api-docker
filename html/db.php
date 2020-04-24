@@ -71,22 +71,12 @@ class Db
         return Db::executeAndFetchAll($sql, $params);
     }
 
-    // insertされたuserのidに合致するuserを再度取得する
-    public static function selectUserByInsertedUserIdFetchAll(int $insertedUserId)
+    // user idに合致するユーザーを取得する
+    public static function selectUserByUserIdFromUsersFetchAll(int $userId)
     {
         $sql = 'SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id';
         $params = [
-            'id' => [$insertedUserId, PDO::PARAM_INT],
-        ];
-        return Db::executeAndFetchAll($sql, $params);
-    }
-
-    // updateされたuserのidに合致するuserを再度取得する
-    public static function selectUserBySelectedIdFetchAll($selectedId)
-    {
-        $sql = 'SELECT id, name, bio, created_at, updated_at FROM users WHERE id = :id';
-        $params = [
-            ':id' => [$selectedId, PDO::PARAM_INT],
+            ':id' => [$userId, PDO::PARAM_INT],
         ];
         return Db::executeAndFetchAll($sql, $params);
     }
@@ -168,27 +158,7 @@ class Db
     {
         $sql = 'SELECT * FROM posts WHERE id = :id';
         $params = [
-            'id' => [$insertedId, PDO::PARAM_INT],
-        ];
-        return Db::executeAndFetchAll($sql, $params);
-    }
-
-    // idに合致するuser_idを持つカラムを選択する
-    public static function selectUserByIdFetchAll(int $id)
-    {
-        $sql = 'SELECT user_id FROM posts WHERE id = :id';
-        $params = [
-            ':id' => [$id, PDO::PARAM_INT],
-        ];
-        return Db::executeAndFetchAll($sql, $params);
-    }
-
-    // updateされたpostを再度取得する
-    public static function selectPostByUpdatedPostIdFetchAll(int $id)
-    {
-        $sql = 'SELECT * FROM posts WHERE id = :id';
-        $params = [
-            ':id' => [$id, PDO::PARAM_INT],
+            ':id' => [$postId, PDO::PARAM_INT],
         ];
         return Db::executeAndFetchAll($sql, $params);
     }
