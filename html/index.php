@@ -34,30 +34,30 @@ if ($substrUri === 'sign_up') {
 } elseif (strpos($substrUri, 'users') === 0) {
     require_once(dirname(__FILE__) . '/controllers/users.php');
     if (strpos($substrUri, 'timeline') !== false) {
-        $id = substr($substrUri, 6, strlen($substrUri) - 6);
-        timeline($id);
+        $userId = substr($substrUri, 6, strlen($substrUri) - 6);
+        timeline($userId);
     } else {
-        $id = substr($substrUri, 6, strlen($substrUri) - 6);
+        $userId = substr($substrUri, 6, strlen($substrUri) - 6);
         $substrUri = substr($substrUri, 0, 5);
         if ($method === 'GET') {
             userList();
         } elseif ($method === 'PUT') {
-            editUser($id);
+            editUser($userId);
         } elseif ($method === 'DELETE') {
-            deleteUser($id);
+            deleteUser($userId);
         }
     }
 } elseif (strpos($substrUri, 'posts') === 0) {
     require_once(dirname(__FILE__) . '/controllers/posts.php');
-    $id = substr($substrUri, 6, strlen($substrUri) - 6);
+    $postId = substr($substrUri, 6, strlen($substrUri) - 6);
     $substrUri = substr($substrUri, 0, 5);
     if ($method === 'GET') {
         postList();
     } elseif ($method === 'POST') {
         submitPost();
     } elseif ($method === 'PUT') {
-        editPost($id);
+        editPost($postId);
     } elseif ($method === 'DELETE') {
-        deletePost($id);
+        deletePost($postId);
     }
 }
