@@ -140,6 +140,12 @@ function editPost($postId)
     $selectPostByPostIdFromPostsFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($postId);
     $userIdFromPostsTable = $selectPostByPostIdFromPostsFetchAllResult[0]['user_id'];
 
+    // 存在しないpost idを指定された場合エラーを返す
+    if ($selectPostByPostIdFromPostsFetchAllResult === []) {
+        $errorMessage = 'そのPostは存在しません';
+        sendResponse($errorMessage);
+    }
+
     // ログイン中のidと編集しようとしている投稿のuser_idを突き合わせ
     if ($userIdFromUsersTable !== $userIdFromPostsTable) {
         $errorMessage = '自分のPostじゃないよ！';
@@ -189,6 +195,12 @@ function deletePost($postId)
 
     // postsテーブルから削除する投稿のuser_idを拾う
     $selectUserIdByIdFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($postId);
+
+    // 存在しないpost idを指定されたらエラーを返す
+    if ($selectUserIdByIdFetchAllResult === []) {
+        $errorMessage = 'そのPostは存在しません';
+        sendResponse($errorMessage);
+    }
 
     // ログイン中のidと削除しようとしている投稿のuser_idを突き合わせ
     if ($userIdFromUsersTable !== $selectUserIdByIdFetchAllResult[0]['user_id']) {
