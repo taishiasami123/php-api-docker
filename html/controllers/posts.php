@@ -91,6 +91,12 @@ function submitPost()
     // postsテーブルにinsertする
     $insertedPostId = Db::insertPostIntoPostsAndReturnInsertedPostId($text, $userIdFromUsersTable);
 
+    // 返り値がnullの場合executeが失敗しているのでエラーメッセージを返す
+    if ($insertedPostId === null) {
+        $errorMessage = '投稿作成に失敗しました';
+        sendResponse($errorMessage);
+    }
+
     // insertしたカラムをselectする
     $selectPostByInsertedIdFromPostsFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($insertedPostId);
     $insertedUserId = $selectPostByInsertedIdFromPostsFetchAllResult[0]['user_id'];
@@ -141,7 +147,10 @@ function editPost($postId)
     }
 
     // postsテーブルをupdateする
-    Db::updatePostSetPosts($text, $postId);
+    if (Db::updatePostSetPosts($text, $postId) === false) {
+        $errorMessage = '投稿編集に失敗しました';
+        sendResponse($errorMessage);
+    }
 
     // updateしたカラムをselectする
     $selectPostAgainByPostIdFromPostsFetchAllResult = Db::selectPostByPostIdFromPostsFetchAll($postId);
@@ -188,7 +197,11 @@ function deletePost($postId)
     }
 
     // postテーブルから削除
-    Db::deletePostFromPosts($postId);
+    if (Db::deletePostFromPosts($postId) === false) {
+        $errorMessage = 'Post削除に失敗しました';
+        sendResponse($errorMessage);
+    }
+
     $message = '正常にPost削除されました';
     sendResponse($message);
 }

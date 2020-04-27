@@ -43,7 +43,10 @@ function signUp()
 
     // db登録処理
     $password = hash('sha256', $password); // passwordハッシュ化
-    Db::insertUserToUsers($name, $bio, $email, $password, $token);
+    if (Db::insertUserToUsers($name, $bio, $email, $password, $token) === false) {
+        $errorMessage = '新規登録に失敗しました';
+        sendResponse($errorMessage);
+    }
 
     // dbからemailが一致するレコードを取得して返却
     $selectUserAgainByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);

@@ -82,7 +82,10 @@ function editUser($userId)
     }
 
     // dbのnameとbioをupdateする
-    Db::updateUserSetUsers($name, $bio, $userId);
+    if (Db::updateUserSetUsers($name, $bio, $userId) === false) {
+        $errorMessage = 'ユーザー編集に失敗しました';
+        sendResponse($errorMessage);
+    }
 
     // updateしたレコードを返却
     $selectUserAgainByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
@@ -119,7 +122,11 @@ function deleteUser($userId)
     }
 
     // ユーザー削除
-    Db::deleteUserFromUsers($userId);
+    if (Db::deleteUserFromUsers($userId) === false) {
+        $errorMessage = 'User削除に失敗しました';
+        sendResponse($errorMessage);
+    }
+
     $message = '正常にUser削除されました';
     sendResponse($message);
 }
