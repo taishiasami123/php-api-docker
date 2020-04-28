@@ -77,7 +77,7 @@ function editUser($userId)
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
-        $errorMessage = '自分のユーザーじゃないよ!';
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
@@ -117,7 +117,7 @@ function deleteUser($userId)
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
-        $errorMessage = '自分のユーザーじゃないよ!';
+        $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage);
     }
 
