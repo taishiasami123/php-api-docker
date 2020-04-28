@@ -14,7 +14,7 @@ function signIn()
     // email欄が空だったらエラー吐く
     if ($email === '') {
         $errorMessage = 'そのemailもしくはpasswordが違います';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // emailに入力された値と一致する行をdbから拾ってくる
@@ -23,7 +23,7 @@ function signIn()
     // 一致するものがなかったらエラー吐く
     if (count($selectUserByEmailFromUsersFetchAllResult) === 0) {
         $errorMessage = 'そのemailもしくはpasswordが違います';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // 一致するものがあったら値取り出す
@@ -33,7 +33,7 @@ function signIn()
     // パスワード一致チェック
     if ($password !== $passwordConfirm || $password !== $passwordFromUsersTable) {
         $errorMessage = 'そのemailもしくはpasswordが違います';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // dbからemailが一致するレコードを取得して返却

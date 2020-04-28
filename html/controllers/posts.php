@@ -16,8 +16,8 @@ function postList()
 
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
-        $errMsg = 'tokenがおかしい';
-        sendResponse($errMsg);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // tokenが見つかったら投稿一覧引っ張る
@@ -84,8 +84,8 @@ function submitPost()
 
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
-        $errMsg = 'tokenがおかしい';
-        sendResponse($errMsg);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // postsテーブルにinsertする
@@ -132,8 +132,8 @@ function editPost($postId)
 
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
-        $errMsg = 'tokenがおかしい';
-        sendResponse($errMsg);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // postsテーブルから編集する投稿のuser_idを拾う
@@ -143,19 +143,19 @@ function editPost($postId)
     // 存在しないpost idを指定された場合エラーを返す
     if ($selectPostByPostIdFromPostsFetchAllResult === []) {
         $errorMessage = 'そのPostは存在しません';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     }
 
     // ログイン中のidと編集しようとしている投稿のuser_idを突き合わせ
     if ($userIdFromUsersTable !== $userIdFromPostsTable) {
         $errorMessage = '自分のPostじゃないよ！';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // postsテーブルをupdateする
     if (Db::updatePostSetPosts($text, $postId) === false) {
         $errorMessage = '投稿編集に失敗しました';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 500);
     }
 
     // updateしたカラムをselectする
@@ -189,8 +189,8 @@ function deletePost($postId)
 
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
-        $errMsg = 'tokenがおかしい';
-        sendResponse($errMsg);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // postsテーブルから削除する投稿のuser_idを拾う
@@ -199,19 +199,19 @@ function deletePost($postId)
     // 存在しないpost idを指定されたらエラーを返す
     if ($selectUserIdByIdFetchAllResult === []) {
         $errorMessage = 'そのPostは存在しません';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     }
 
     // ログイン中のidと削除しようとしている投稿のuser_idを突き合わせ
     if ($userIdFromUsersTable !== $selectUserIdByIdFetchAllResult[0]['user_id']) {
         $errorMessage = '自分のPostじゃないよ！';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // postテーブルから削除
     if (Db::deletePostFromPosts($postId) === false) {
         $errorMessage = 'Post削除に失敗しました';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 500);
     }
 
     $message = '正常にPost削除されました';

@@ -8,8 +8,10 @@ header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Methods: *');
 
 // jsonを返して死ぬやつ
-function sendResponse($obj)
+// jsonを返して死ぬやつ
+function sendResponse($obj, $httpResponseCode = 200)
 {
+    http_response_code($httpResponseCode);
     echo json_encode($obj);
     die();
 }

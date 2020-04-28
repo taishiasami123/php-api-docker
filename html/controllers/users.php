@@ -17,7 +17,7 @@ function userList()
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // tokenが見つかったらユーザー一覧引っ張る
@@ -72,19 +72,19 @@ function editUser($userId)
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // dbのnameとbioをupdateする
     if (Db::updateUserSetUsers($name, $bio, $userId) === false) {
         $errorMessage = 'ユーザー編集に失敗しました';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 500);
     }
 
     // updateしたレコードを返却
@@ -112,19 +112,19 @@ function deleteUser($userId)
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // ユーザー削除
     if (Db::deleteUserFromUsers($userId) === false) {
         $errorMessage = 'User削除に失敗しました';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 500);
     }
 
     $message = '正常にUser削除されました';
@@ -153,7 +153,7 @@ function timeline($userId)
     // tokenが見つからなかったらエラー吐く
     if ($tokenFromUsersTable === null) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // tokenが見つかったら投稿一覧引っ張る
