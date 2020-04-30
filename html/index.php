@@ -7,7 +7,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Methods: *');
 
-// jsonを返して死ぬやつ
+// プリフライトリクエスト対策
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS' && isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+    // 200番でレスポンスする
+    die();
+}
+
 // jsonを返して死ぬやつ
 function sendResponse($obj, $httpResponseCode = 200)
 {
