@@ -21,7 +21,7 @@ function signIn()
     $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
 
     // 一致するものがなかったらエラー吐く
-    if (count($selectUserByEmailFromUsersFetchAllResult) === 0) {
+    if ($selectUserByEmailFromUsersFetchAllResult === false || count($selectUserByEmailFromUsersFetchAllResult) === 0) {
         $errorMessage = 'そのemailもしくはpasswordが違います';
         sendResponse($errorMessage, 401);
     }

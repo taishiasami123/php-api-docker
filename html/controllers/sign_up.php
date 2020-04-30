@@ -35,8 +35,7 @@ function signUp()
     }
 
     // email重複チェック
-    $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
-    if (count($selectUserByEmailFromUsersFetchAllResult) > 0) {
+    if (count(Db::selectUserByEmailFromUsersFetchAll($email)) !== 0) {
         $errorMessage = 'そのemailは登録されている';
         sendResponse($errorMessage, 401);
     }

@@ -12,10 +12,9 @@ function userList()
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage, 401);
     }
@@ -66,14 +65,15 @@ function editUser($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
-    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage, 401);
     }
+
+    // user idを取得する
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
@@ -106,14 +106,15 @@ function deleteUser($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
-    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage, 401);
     }
+
+    // user idを取得する
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
@@ -148,10 +149,9 @@ function timeline($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
         sendResponse($errorMessage, 401);
     }
