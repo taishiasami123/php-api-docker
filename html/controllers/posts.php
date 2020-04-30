@@ -117,6 +117,12 @@ function submitPost()
 // ---------- 投稿編集機能 ----------
 function editPost($postId)
 {
+    // postIdが空だったらエラーを返す
+    if ($postId === '') {
+        $errorMessage = 'POST IDを入力してください';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -180,6 +186,12 @@ function editPost($postId)
 // ---------- 投稿削除機能 ----------
 function deletePost($postId)
 {
+    // postIdが空だったらエラーを返す
+    if ($postId === '') {
+        $errorMessage = 'POST IDを入力してください';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];

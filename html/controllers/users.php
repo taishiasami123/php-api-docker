@@ -54,6 +54,12 @@ function userList()
 // ---------- ユーザー編集機能 ----------
 function editUser($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -99,6 +105,12 @@ function editUser($userId)
 // ---------- ユーザー削除機能 ----------
 function deleteUser($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -139,6 +151,12 @@ function deleteUser($userId)
 // ---------- タイムライン機能 ----------
 function timeline($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '/timeline') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
