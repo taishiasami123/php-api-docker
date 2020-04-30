@@ -19,19 +19,19 @@ function signUp()
     // blankチェック
     if ($name === '') {
         $errorMessage = "Validation failed: Name can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($bio === '') {
         $errorMessage = "Validation failed: Bio can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($email === '') {
         $errorMessage = "Validation failed: Email can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($password === '') {
         $errorMessage = "Validation failed: Password can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($password != $passwordConfirm) { // password一致チェック
         $errorMessage = "Validation failed: Password confirmation doesn't match password";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     }
 
     // email重複チェック
