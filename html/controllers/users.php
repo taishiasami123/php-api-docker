@@ -12,12 +12,11 @@ function userList()
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // tokenが見つかったらユーザー一覧引っ張る
@@ -55,6 +54,12 @@ function userList()
 // ---------- ユーザー編集機能 ----------
 function editUser($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -66,23 +71,27 @@ function editUser($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
-    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
+
+    // user idを取得する
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
-        $errorMessage = '自分のユーザーじゃないよ!';
-        sendResponse($errorMessage);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // dbのnameとbioをupdateする
-    Db::updateUserSetUsers($name, $bio, $userId);
+    if (Db::updateUserSetUsers($name, $bio, $userId) === false) {
+        $errorMessage = 'ユーザー編集に失敗しました';
+        sendResponse($errorMessage, 500);
+    }
 
     // updateしたレコードを返却
     $selectUserAgainByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
@@ -96,6 +105,12 @@ function editUser($userId)
 // ---------- ユーザー削除機能 ----------
 function deleteUser($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -103,23 +118,28 @@ function deleteUser($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
-    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
+
+    // user idを取得する
+    $userIdFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['id'];
 
     // 入力されたidとdbから拾ったidを比較して一致しなかったらエラー吐く
     if ($userId !== $userIdFromUsersTable) {
-        $errorMessage = '自分のユーザーじゃないよ!';
-        sendResponse($errorMessage);
+        $errorMessage = 'tokenがおかしい';
+        sendResponse($errorMessage, 401);
     }
 
     // ユーザー削除
-    Db::deleteUserFromUsers($userId);
+    if (Db::deleteUserFromUsers($userId) === false) {
+        $errorMessage = 'User削除に失敗しました';
+        sendResponse($errorMessage, 500);
+    }
+
     $message = '正常にUser削除されました';
     sendResponse($message);
 }
@@ -131,6 +151,12 @@ function deleteUser($userId)
 // ---------- タイムライン機能 ----------
 function timeline($userId)
 {
+    // userIdが空だったらエラー吐く
+    if ($userId === '/timeline') {
+        $errorMessage = 'ユーザーIDを指定して下さい';
+        sendResponse($errorMessage, 400);
+    }
+
     // jsonを取得
     $header = getallheaders();
     $bearerToken = $header['Authorization'];
@@ -141,12 +167,11 @@ function timeline($userId)
 
     // dbにtokenを探しに行く
     $selectUserByTokenFromUsersFetchAllResult = Db::selectUserByTokenFromUsersFetchAll($token);
-    $tokenFromUsersTable = $selectUserByTokenFromUsersFetchAllResult[0]['token'];
 
     // tokenが見つからなかったらエラー吐く
-    if ($tokenFromUsersTable === null) {
+    if ($selectUserByTokenFromUsersFetchAllResult === false || count($selectUserByTokenFromUsersFetchAllResult) === 0) {
         $errorMessage = 'tokenがおかしい';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // tokenが見つかったら投稿一覧引っ張る

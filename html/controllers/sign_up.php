@@ -19,31 +19,33 @@ function signUp()
     // blankチェック
     if ($name === '') {
         $errorMessage = "Validation failed: Name can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($bio === '') {
         $errorMessage = "Validation failed: Bio can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($email === '') {
         $errorMessage = "Validation failed: Email can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($password === '') {
         $errorMessage = "Validation failed: Password can't be blank";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     } elseif ($password != $passwordConfirm) { // password一致チェック
         $errorMessage = "Validation failed: Password confirmation doesn't match password";
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 400);
     }
 
     // email重複チェック
-    $selectUserByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);
-    if (count($selectUserByEmailFromUsersFetchAllResult) > 0) {
+    if (count(Db::selectUserByEmailFromUsersFetchAll($email)) !== 0) {
         $errorMessage = 'そのemailは登録されている';
-        sendResponse($errorMessage);
+        sendResponse($errorMessage, 401);
     }
 
     // db登録処理
     $password = hash('sha256', $password); // passwordハッシュ化
-    Db::insertUserToUsers($name, $bio, $email, $password, $token);
+    if (Db::insertUserToUsers($name, $bio, $email, $password, $token) === false) {
+        $errorMessage = '新規登録に失敗しました';
+        sendResponse($errorMessage, 500);
+    }
 
     // dbからemailが一致するレコードを取得して返却
     $selectUserAgainByEmailFromUsersFetchAllResult = Db::selectUserByEmailFromUsersFetchAll($email);

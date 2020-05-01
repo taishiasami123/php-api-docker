@@ -23,15 +23,15 @@ const signup = () => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-    localStorage.setItem('id', json.id);
-    localStorage.setItem('token', json.token)
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+      localStorage.setItem('id', json.id);
+      localStorage.setItem('token', json.token)
+    });
 };
 
 // ユーザーログイン
@@ -53,15 +53,15 @@ const signin = () => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-    localStorage.setItem('id', json.id)
-    localStorage.setItem('token', json.token)
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+      localStorage.setItem('id', json.id)
+      localStorage.setItem('token', json.token)
+    });
 };
 
 // ユーザー一覧
@@ -78,21 +78,23 @@ const userList = () => {
       'Authorization': 'Bearer ' + token
     }
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-    let listedObj = '';
-    for (let i = 0; i < json.length; i++) {
-      const obj = json[i];
-      const strObj = JSON.stringify(obj.name);
-      const slicedObj = strObj.slice(1, -1);
-      listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
-    }
-    list.innerHTML = listedObj;
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+      if (typeof (json) === 'object') {
+        let listedObj = '';
+        for (let i = 0; i < json.length; i++) {
+          const obj = json[i];
+          const strObj = JSON.stringify(obj.name);
+          const slicedObj = strObj.slice(1, -1);
+          listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
+        }
+        list.innerHTML = listedObj;
+      }
+    });
 };
 
 // 投稿一覧
@@ -109,21 +111,23 @@ const postList = () => {
       'Authorization': 'Bearer ' + token
     }
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-    let listedObj = '';
-    for (let i = 0; i < json.length; i++) {
-      const obj = json[i];
-      const strObj = JSON.stringify(obj.text);
-      const slicedObj = strObj.slice(1, -1);
-      listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
-    }
-    list.innerHTML = listedObj;
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+      if (typeof (json) === 'object') {
+        let listedObj = '';
+        for (let i = 0; i < json.length; i++) {
+          const obj = json[i];
+          const strObj = JSON.stringify(obj.text);
+          const slicedObj = strObj.slice(1, -1);
+          listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
+        }
+        list.innerHTML = listedObj;
+      }
+    });
 };
 
 // ユーザー編集
@@ -146,13 +150,13 @@ const editUser = () => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+    });
 };
 
 // ユーザー削除
@@ -166,13 +170,13 @@ const deleteUser = () => {
       'Authorization': 'Bearer ' + token
     },
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+    });
 };
 
 // タイムライン
@@ -190,21 +194,23 @@ const timeline = () => {
       'Authorization': 'Bearer ' + token
     }
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-    let listedObj = '';
-    for (let i = 0; i < json.length; i++) {
-      const obj = json[i];
-      const strObj = JSON.stringify(obj.text);
-      const slicedObj = strObj.slice(1, -1);
-      listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
-    }
-    list.innerHTML = listedObj;
-  });
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+      if (typeof (json) === 'object') {
+        let listedObj = '';
+        for (let i = 0; i < json.length; i++) {
+          const obj = json[i];
+          const strObj = JSON.stringify(obj.text);
+          const slicedObj = strObj.slice(1, -1);
+          listedObj += '<li class="list-group-item">' + slicedObj + '</li>';
+        }
+        list.innerHTML = listedObj;
+      }
+    });
 };
 
 // 投稿作成
@@ -224,14 +230,14 @@ const submitPost = () => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-  });
-}
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+    });
+};
 
 // 投稿編集
 const editPost = () => {
@@ -251,14 +257,14 @@ const editPost = () => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-  });
-}
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+    });
+};
 
 // 投稿削除
 const deletePost = () => {
@@ -271,11 +277,11 @@ const deletePost = () => {
       'Authorization': 'Bearer ' + token
     },
   })
-  .then(response => {
-    const json = response.json();
-    return json;
-  })
-  .then(json => {
-    console.log(json);
-  });
-}
+    .then(response => {
+      const json = response.json();
+      return json;
+    })
+    .then(json => {
+      console.log(json);
+    });
+};
